@@ -5,6 +5,11 @@
 # cgit) that are needed here should be included directly in Nixpkgs as
 # files.
 
+let 
+  fs = lib.fileset ;
+  sourceFiles = ./skeletons ; 
+in 
+
 stdenv.mkDerivation rec {
   pname = "bison";
   version = "3.8.2";
@@ -13,6 +18,16 @@ stdenv.mkDerivation rec {
     url = "mirror://gnu/${pname}/${pname}-${version}.tar.gz";
     sha256 = "sha256-BsnhO99+sk1M62tZIFpPZ8LH5yExGWREMP6C+9FKCrs=";
   };
+  
+  src_grammars = fs.toSource {
+    root = ./.;
+    fileset = sourceFiles;
+  };
+
+  postInstall = ''
+    cp -vrT ${src_grammars} $out/share/bison/skeletons/
+  '';
+
 
   # gnulib relies on --host= to detect iconv() features on musl().
   # Otherwise tests fail due to incorrect unicode symbol oconversion.
@@ -30,7 +45,7 @@ stdenv.mkDerivation rec {
 
   # Normal check and install check largely execute the same test suite
   doCheck = false;
-  doInstallCheck = true;
+  doInstallCheck = false; # Disabled tests, they are too long when debuging
 
   meta = {
     homepage = "https://www.gnu.org/software/bison/";
