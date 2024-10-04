@@ -1,7 +1,9 @@
-{ lib, stdenv, fetchurl, bison, cmake, pkg-config
-, icu, libedit, libevent, lz4, ncurses, openssl, protobuf_21, re2, readline, zlib, zstd, libfido2
-, darwin, numactl, libtirpc, rpcsvc-proto, curl
-}:
+{ pkgs ? import <nixpkgs> {}}:
+with (pkgs) ; 
+
+let 
+  custom-bison = (callPackage ../bison/package.nix {});  
+in
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "mysql";
@@ -12,7 +14,8 @@ stdenv.mkDerivation (finalAttrs: {
     hash = "sha256-Vlenjchr8L8iJ+CwX43losRHqBahEv+ib6cAg7y+mBQ=";
   };
 
-  nativeBuildInputs = [ bison cmake pkg-config ]
+
+  nativeBuildInputs = [ custom-bison cmake pkg-config ]
     ++ lib.optionals (!stdenv.isDarwin) [ rpcsvc-proto ];
 
   patches = [
