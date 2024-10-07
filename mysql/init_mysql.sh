@@ -13,6 +13,7 @@ fi
 # This seems like a weird hack...
 if [ $(ps -aux | grep "/tmp/mysqld/socket" | wc -l) -eq 1 ]; then
   ./result/bin/mysqld --socket $SOCKET_PATH --datadir /tmp/mysqld/datadir &
+  sleep 5 # Wait for the server to start  
   ./result/bin/mysql --user=root   --socket $SOCKET_PATH < ./init_db.sql 
 else
   echo "MySQL server on that socket is already running."
