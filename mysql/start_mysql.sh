@@ -1,5 +1,7 @@
 #!/bin/bash
-PREFIX=/tmp/mysqld_00
+S_HOSTNAME=$(hostname -s)
+PREFIX=~/tmp/$S_HOSTNAME/mysqld
+
 
 DATA_PATH=$PREFIX/datadir
 SOCKET_PATH=$PREFIX/socket
