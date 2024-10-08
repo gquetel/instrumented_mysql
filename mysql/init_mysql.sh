@@ -1,8 +1,11 @@
 #!/bin/bash
 PREFIX=/tmp/mysqld_00
+
 DATA_PATH=$PREFIX/datadir
 SOCKET_PATH=$PREFIX/socket
 BASEDIR=./result/bin
+S_HOSTNAME=$(hostname -s)
+
 # Check existence of /tmp/mysqld/datadir
 
 if [ -d "$DATA_PATH" ]; then
@@ -11,15 +14,5 @@ else
     mkdir -p $DATA_PATH
     ./result/bin/mysqld --log-error --basedir=$BASEDIR  --datadir $DATA_PATH --initialize-insecure
 fi
-
-# This seems like a weird hack...
-if [ $(ps -aux | grep $SOCKET_PATH | wc -l) -eq 1 ]; then
-  ./result/bin/mysqld --log-error --basedir=$BASEDIR --socket $SOCKET_PATH --datadir $DATA_PATH &
-  sleep 5 # Wait for the server to start  
-  # If the connection doesn't succeed, it means root password has already been executed: we already initialized it.
-  ./result/bin/mysql --user=root   --socket $SOCKET_PATH < ./init_db.sql 
-else
-  echo "MySQL server on that socket is already running."
-fi
-GAUR_LOG_PATH="$DATA_PATH/gaur.log"
-
+echo "Reading log at $DATA_PATH/$S_HOSTNAME.err"
+cat $DATA_PATH/$S_HOSTNAME.err
