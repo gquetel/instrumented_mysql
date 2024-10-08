@@ -6,6 +6,10 @@
  nix-build -E 'let pkgs = import <nixpkgs> { }; in pkgs.callPackage ./package.nix {}'
 ```
 
+###### Init db script
+- Option `--log-error` nécessaire sur les machines de calcul car sinon mysql prend la configuration du /etc/mysql/...cnf qui lui dit d'aller écrire dans une fichier auquel il n'a pas accès et cela fait planter l'initialisation. Ainsi par défaut les logs d'erreurs seront imprimés dans `datadir/hostname.err`.
+- Option `--port 61337` (port aléatoire) est apparement nécessaire pour lancer le serveur. Même si l'on utilise un socket, il lui faut un port valide, or un mysql tourne déjà sur les machines, on en fourni un aléatoire.
+  
 ## Building instrumented Bison
 
 ## TODO: 
