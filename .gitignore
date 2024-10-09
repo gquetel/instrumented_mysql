@@ -1,7 +1,7 @@
 result/
-result/*
-bison/result/
-mysql/result/
+result
+bison/result
+mysql/result
 
 _mysql_files/
 start_imysql.nix

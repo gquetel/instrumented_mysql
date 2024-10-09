@@ -1,24 +1,20 @@
 # Instrumented MySQL
 
-## Building instrumented MySQL
+This repository provides a Nix expression of a MySQL instrumented (by the GAUR tool) parser. The instrumented MySQL can be build using:
 
 ```
- nix-build -E 'let pkgs = import <nixpkgs> { }; in pkgs.callPackage ./package.nix {}'
+nix-build default.nix
 ```
 
-###### Init db script
-- Option `--log-error` nécessaire sur les machines de calcul car sinon mysql prend la configuration du /etc/mysql/...cnf qui lui dit d'aller écrire dans une fichier auquel il n'a pas accès et cela fait planter l'initialisation. Ainsi par défaut les logs d'erreurs seront imprimés dans `datadir/hostname.err`.
-- Option `--port 61337` (port aléatoire) est apparement nécessaire pour lancer le serveur. Même si l'on utilise un socket, il lui faut un port valide, or un mysql tourne déjà sur les machines, on en fourni un aléatoire.
-  
-## Building instrumented Bison
+The build phase possess two steps: the building of a custom bison (for which we simply add custom skeletons) and the building of MySQL on which we apply our custom [patch](./mysql/sql_yacc.patch) which replace the bison grammar, by an instrumented one.
 
-## TODO: 
+## Bash scripts
 
-- ~~Ajouter le patch de grammaire MySQL.~~
-- ~~Modifier package bison pour y inclure le fichier squelette modifié. -> voir https://nix.dev/tutorials/working-with-local-files.html.~~ 
-- Puis indiquer à MySQL de dépendre de ce package modifié. -> voir https://nixos.wiki/wiki/Overlays#Overriding_a_version
-- ~~Ajouter script qui, une fois mysql compilé, initialise le serveur~~   voir-> https://discourse.nixos.org/t/is-there-a-way-to-run-mysql-via-nixpkgs-on-non-nixos-distros-like-ubuntu/9767/7
-- Script SQL qui initialise le compte utilisateur, la base de données et la table pour les XPs.
-- Tout mettre dans un docker ?
+We provide simple bash scripts to automatically initialize, start and kill and clean the instrumented MySQL server.
+- [Initialization script](./init_mysql.sh) Initialize the database under `~/tmp/HOSTNAME/mysqld` (where HOSTNAME is the name of the machine) and with the datadir being located at `~/tmp/HOSTNAME/mysqld/datadir`.
+- [Database start script](./start_mysql.sh) Starts the database on port 61337 and using a socket located at `~/tmp/HOSTNAME/mysqld/socket`. The first time the database is started, the script also run SQL queries from file [init_db.sql](./init_db.sql) required for our experience.
+- [Database shutdown and directory cleaning](./kill_and_clean_mysql_files.sh) Attempt to retrieve PID of `mysqld` process using the socket and kill it. Also asks for removing `~/tmp/HOSTNAME/mysqld` directory. 
 
-- Pour que le connector python se connecte via socket, utiliser le fichier de config, argument unix_socket à la fonction mysql.connector.connect() avec la même valeur que SOCKET_PATH.
+### Notes on scripts
+- Option `--log-error` is necessary on computing machines, as otherwise mysql takes the /etc/mysql/...cnf configuration which tells it to write to a file it doesn't have access to, causing initialization to crash. By default, error logs will be printed in `datadir/hostname.err`.
+- Option `--port 61337` is used as a mysqld is already running on the cluster machines, so a random port is provided.

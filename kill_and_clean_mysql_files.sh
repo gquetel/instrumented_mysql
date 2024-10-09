@@ -19,7 +19,6 @@ fi
 
 read -p "Do you want to remove the directory $DATA_PATH? [y/n] " -n 1 -r
 echo 
-
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   rm -rf $DATA_PATH
 fi
