@@ -2,23 +2,32 @@
 S_HOSTNAME=$(hostname -s)
 PREFIX=~/tmp/$S_HOSTNAME/mysqld
 
-SOCKET_PATH=$PREFIX/socket
-DATA_PATH=$PREFIX/datadir
+DELETE_DIRS=0 # Do not delete by default
 
-# Find PID of process which is using the socket, only print first line 
-PID=$(ps -aux | grep $SOCKET_PATH | awk '{print $2}' | head -n 1)
-COMM=$(cat /proc/${PID}/comm)
+# Find PIDs of process using the PREFIX path and the --daemonize flag, i.e., the MySQL servers
+PID=$(ps -aux | grep $PREFIX | grep "daemonize" | awk '{print $2}')
 
-# If comm is mysqld, kill the process
-if [ "$COMM" == "mysqld" ]; then
-  echo "Killing process with PID $PID"
-  kill -9 $PID
+# Check if results, if not, asks if the user wants to remove the directories
+if [ -z "$PID" ]; then
+  echo "No MySQL server seems to be running."
+  exit 1  
 else
-  echo "No process seems to be using the socket."
+  read -p "Do you want to remove the mysqld directories? [y/n] " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    rm -rf $PREFIX"*"
+  fi
 fi
-
-read -p "Do you want to remove the directory $DATA_PATH? [y/n] " -n 1 -r
-echo 
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  rm -rf $DATA_PATH
-fi
+  
+# Iterate over the PIDs
+for p in $PID; do
+  # Get the command that started the process
+  COMM=$(cat /proc/${p}/comm)
+  # If comm is mysqld, kill the process
+  if [ "$COMM" == "mysqld" ]; then
+    kill -9 $p
+    echo "Killed process with PID $p"
+  else
+    echo "The process with PID $p is not mysqld ($COMM)."
+  fi
+done
