@@ -27,6 +27,8 @@ for p in $PID; do
   if [ "$COMM" == "mysqld" ]; then
     kill -9 $p
     echo "Killed process with PID $p"
+    # Also clean error files:
+    rm -f $PREFIX"_"$i"/datadir/$S_HOSTNAME.err"
   else
     echo "The process with PID $p is not mysqld ($COMM)."
   fi
