@@ -3,8 +3,8 @@ S_HOSTNAME=$(hostname -s)
 PREFIX=~/tmp/$S_HOSTNAME/mysqld
 BASEDIR=./result/bin
 
-if [ $# -ne 1 ]; then
-  echo "Usage: $0 <number of MySQL servers to start>"
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <number of MySQL servers to start> [path to configuration file]"
   exit 1
 fi
 
