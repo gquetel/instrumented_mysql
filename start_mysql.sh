@@ -8,6 +8,13 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
+if [ -n "$2" ]; then
+  if [ ! -f $2 ]; then
+    echo "Configuration file $2 does not exist."
+    exit 1
+  fi
+fi
+
 if [ $1 -lt 1 ] || [ $1 -gt 30 ]; then
   echo "Number of MySQL servers should be between 1 and 30 (what madlad would want more than 30 ?)"
   exit 1
@@ -23,7 +30,12 @@ for i in $(seq 1 $1); do
 
     if [ -d "$PARENT_DIR" ]; then
         echo "Starting MySQL server $i, using datadir $DATA_PATH, socket $SOCKET_PATH, and port $PORT."
-        ./result/bin/mysqld --log-error --basedir=$BASEDIR --socket $SOCKET_PATH --datadir $DATA_PATH --port $PORT --daemonize 
+        if [ -n "$2" ]; then
+            ./result/bin/mysqld --defaults-file=$2 --log-error --basedir=$BASEDIR --socket $SOCKET_PATH --datadir $DATA_PATH --port $PORT --daemonize 
+        else
+            ./result/bin/mysqld --log-error --basedir=$BASEDIR --socket $SOCKET_PATH --datadir $DATA_PATH --port $PORT --daemonize 
+        fi
+        
         sleep 5 # Wait for the server to start  
         # # If the connection doesn't succeed, it means root password has already been executed: we already initialized it.
         ./result/bin/mysql --user=root   --socket $SOCKET_PATH < ./init_db.sql 
