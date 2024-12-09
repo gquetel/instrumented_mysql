@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 S_HOSTNAME=$(hostname -s)
 DEL_PATH=~/tmp/$S_HOSTNAME/
 PREFIX=$DEL_PATH"mysqld"

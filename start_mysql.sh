@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 S_HOSTNAME=$(hostname -s)
 PREFIX=~/tmp/$S_HOSTNAME/mysqld
 BASEDIR=./result/bin
@@ -46,4 +46,3 @@ for i in $(seq 1 $1); do
         exit 1
     fi
 done
-
