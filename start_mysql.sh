@@ -36,7 +36,7 @@ for i in $(seq 1 $1); do
             ./result/bin/mysqld --log-error --basedir=$BASEDIR --socket $SOCKET_PATH --datadir $DATA_PATH --port $PORT --daemonize 
         fi
         
-        sleep 5 # Wait for the server to start  
+        sleep 5 # Dirty sleep to wait for the SQL server to start  
         # # If the connection doesn't succeed, it means root password has already been executed: we already initialized it.
         ./result/bin/mysql --user=root   --socket $SOCKET_PATH < ./init_db.sql 
         echo "Reading log at $DATA_PATH/$S_HOSTNAME.err"
