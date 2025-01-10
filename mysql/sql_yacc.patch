@@ -1,5 +1,5 @@
 diff --git a/sql/sql_yacc.yy b/sql/sql_yacc.yy
-index 64b26b3ac2d..82e1d9aa949 100644
+index 661b38163ef..82e1d9aa949 100644
 --- a/sql/sql_yacc.yy
 +++ b/sql/sql_yacc.yy
 @@ -1,38 +1,11 @@
@@ -1303,7 +1303,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  %token<lexer.keyword> SUPER_SYM 813
  %token<lexer.keyword> SUSPEND_SYM 814
  %token<lexer.keyword> SWAPS_SYM 815
-@@ -1182,309 +992,275 @@ void warn_on_deprecated_user_defined_collation(
+@@ -1182,311 +992,275 @@ void warn_on_deprecated_user_defined_collation(
  %token  SYSDATE 817
  %token<lexer.keyword> TABLES 818
  %token<lexer.keyword> TABLESPACE_SYM 819
@@ -1728,6 +1728,8 @@ index 64b26b3ac2d..82e1d9aa949 100644
 -%token<lexer.keyword> BERNOULLI_SYM              1213  /* SQL-2016-N */
 -%token<lexer.keyword> TABLESAMPLE_SYM            1214  /* SQL-2016-R */
 -
+-%token<lexer.keyword> VECTOR_SYM 1215
+-
 -/*
 -  NOTE! When adding new non-standard keywords, make sure they are added to the
 -  list ident_keywords_unambiguous lest they become reserved keywords.
@@ -1830,7 +1832,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  %right UNIQUE_SYM KEY_SYM
  
  %left UNION_SYM EXCEPT_SYM
-@@ -1525,7 +1301,7 @@ void warn_on_deprecated_user_defined_collation(
+@@ -1527,7 +1301,7 @@ void warn_on_deprecated_user_defined_collation(
          TEXT_STRING_validated
          filter_wild_db_table_string
          opt_constraint_name
@@ -1839,7 +1841,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
          opt_describe_column
          opt_datadir_ssl default_encryption
          lvalue_ident
-@@ -1579,9 +1355,7 @@ void warn_on_deprecated_user_defined_collation(
+@@ -1581,9 +1355,7 @@ void warn_on_deprecated_user_defined_collation(
  %type <order_direction>
          ordering_direction opt_ordering_direction
  
@@ -1850,7 +1852,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  %type <num> opt_start_transaction_option_list
  %type <num> start_transaction_option_list
  %type <num> start_transaction_option
-@@ -1807,9 +1581,7 @@ void warn_on_deprecated_user_defined_collation(
+@@ -1809,9 +1581,7 @@ void warn_on_deprecated_user_defined_collation(
  
  %type <show_cmd_type> opt_show_cmd_type
  
@@ -1861,7 +1863,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  %type <num> opt_replica_thread_option_list
  %type <num> replica_thread_option_list
  %type <num> replica_thread_option
-@@ -1856,14 +1628,14 @@ void warn_on_deprecated_user_defined_collation(
+@@ -1858,14 +1628,14 @@ void warn_on_deprecated_user_defined_collation(
  
  %type <group> opt_group_clause
  
@@ -1881,7 +1883,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
  %type <window_frame> opt_window_frame_clause
  
-@@ -2186,7 +1958,7 @@ void warn_on_deprecated_user_defined_collation(
+@@ -2188,7 +1958,7 @@ void warn_on_deprecated_user_defined_collation(
  
  %type <wild_or_where> opt_wild_or_where
  
@@ -1890,7 +1892,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  %type <jtc_list> columns_clause columns_list
  %type <jt_column> jt_column
  %type <json_on_response> json_on_response on_empty on_error
-@@ -2205,7 +1977,7 @@ void warn_on_deprecated_user_defined_collation(
+@@ -2207,7 +1977,7 @@ void warn_on_deprecated_user_defined_collation(
  %type <role_or_privilege_list> role_or_privilege_list
  
  %type <with_validation> with_validation opt_with_validation
@@ -1899,7 +1901,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
  %type <alter_table_action> alter_list_item alter_table_partition_options
  %type <ts_options> logfile_group_option_list opt_logfile_group_options
-@@ -2275,78 +2047,3752 @@ void warn_on_deprecated_user_defined_collation(
+@@ -2277,78 +2047,3752 @@ void warn_on_deprecated_user_defined_collation(
  
  %type <query_id> opt_for_query
  
@@ -5695,7 +5697,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              if (!thd->is_bootstrap_system_thread() &&
                  !thd->m_parser_state->has_comment())
-@@ -2357,312 +5803,272 @@ sql_statement:
+@@ -2359,312 +5803,272 @@ sql_statement:
              thd->lex->sql_command= SQLCOM_EMPTY_QUERY;
              YYLIP->found_semicolon= nullptr;
            }
@@ -6188,7 +6190,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX* lex= thd->lex;
              assert(lex->m_sql_cmd == nullptr);
-@@ -2670,166 +6076,148 @@ change_replication_stmt:
+@@ -2672,166 +6076,148 @@ change_replication_stmt:
              lex->m_sql_cmd= NEW_PTN Sql_cmd_change_repl_filter();
              if (lex->m_sql_cmd == nullptr)
                MYSQL_YYABORT;
@@ -6395,7 +6397,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              Item_string *table_item= NEW_PTN Item_string($1.str, $1.length,
                                                           thd->charset());
-@@ -2837,70 +6225,60 @@ filter_table_ident:
+@@ -2839,70 +6225,60 @@ filter_table_ident:
              table_item->append($3.str, $3.length);
              $$= table_item;
            }
@@ -6483,7 +6485,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              Lex->mi.password = $3.str;
              if (strlen($3.str) > 32)
              {
-@@ -2909,21 +6287,17 @@ source_def:
+@@ -2911,21 +6287,17 @@ source_def:
              }
              Lex->contains_plaintext_password= true;
            }
@@ -6509,7 +6511,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($3 > SOURCE_DELAY_MAX)
              {
                const char *msg= YYTHD->strmake(@3.cpp.start, @3.cpp.end - @3.cpp.start);
-@@ -2933,61 +6307,48 @@ source_def:
+@@ -2935,61 +6307,48 @@ source_def:
              else
                Lex->mi.sql_delay = $3;
            }
@@ -6585,7 +6587,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              Item *num= $3;
              ITEMIZE(num, &num);
  
-@@ -3020,27 +6381,22 @@ source_def:
+@@ -3022,27 +6381,22 @@ source_def:
              }
              Lex->mi.heartbeat_opt=  LEX_SOURCE_INFO::LEX_MI_ENABLE;
            }
@@ -6619,7 +6621,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              switch($3) {
              case 0:
                  Lex->mi.require_row_format =
-@@ -3055,9 +6411,8 @@ source_def:
+@@ -3057,9 +6411,8 @@ source_def:
                my_error(ER_REQUIRE_ROW_FORMAT_INVALID_VALUE, MYF(0), wrong_value);
              }
            }
@@ -6631,7 +6633,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              switch($3) {
              case 0:
                  Lex->mi.m_source_connection_auto_failover =
-@@ -3072,9 +6427,8 @@ source_def:
+@@ -3074,9 +6427,8 @@ source_def:
                  MYSQL_YYABORT;
              }
            }
@@ -6643,7 +6645,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              switch($3) {
              case 0:
                  Lex->mi.m_gtid_only =
-@@ -3090,66 +6444,56 @@ source_def:
+@@ -3092,66 +6444,56 @@ source_def:
                  MYSQL_YYABORT;
              }
            }
@@ -6728,7 +6730,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              Lex->mi.assign_gtids_to_anonymous_transactions_type = LEX_SOURCE_INFO::LEX_MI_ANONYMOUS_TO_GTID_UUID;
              Lex->mi.assign_gtids_to_anonymous_transactions_manual_uuid = $1.str;
              if (!mysql::gtid::Uuid::is_valid($1.str, mysql::gtid::Uuid::TEXT_LENGTH))
-@@ -3158,66 +6502,46 @@ assign_gtids_to_anonymous_transactions_def:
+@@ -3160,66 +6502,46 @@ assign_gtids_to_anonymous_transactions_def:
                MYSQL_YYABORT;
              }
            }
@@ -6810,7 +6812,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$= NEW_PTN PT_create_table_stmt(@$, YYMEM_ROOT, $2, $4, $5,
                                               $7,
                                               $9.opt_create_table_options,
-@@ -3225,9 +6549,7 @@ create_table_stmt:
+@@ -3227,9 +6549,7 @@ create_table_stmt:
                                               $9.on_duplicate,
                                               $9.opt_query_expression);
            }
@@ -6821,7 +6823,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$= NEW_PTN PT_create_table_stmt(@$, YYMEM_ROOT, $2, $4, $5,
                                               nullptr,
                                               $6.opt_create_table_options,
-@@ -3235,95 +6557,74 @@ create_table_stmt:
+@@ -3237,95 +6557,74 @@ create_table_stmt:
                                               $6.on_duplicate,
                                               $6.opt_query_expression);
            }
@@ -6936,7 +6938,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              if ($6 != nullptr)
              {
-@@ -3333,16 +6634,14 @@ create:
+@@ -3335,16 +6634,14 @@ create:
  
              auto cmd= NEW_PTN Sql_cmd_create_tablespace{$3, $4, $5, pc};
              if (!cmd)
@@ -6956,7 +6958,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              if ($7 != nullptr)
              {
-@@ -3353,13 +6652,11 @@ create:
+@@ -3355,13 +6652,11 @@ create:
              auto cmd= NEW_PTN Sql_cmd_create_undo_tablespace{
                CREATE_UNDO_TABLESPACE, $4, $6, pc};
              if (!cmd)
@@ -6972,7 +6974,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              Lex->sql_command= SQLCOM_CREATE_SERVER;
              if ($3.length == 0)
              {
-@@ -3371,30 +6668,24 @@ create:
+@@ -3373,30 +6668,24 @@ create:
              Lex->m_sql_cmd=
                NEW_PTN Sql_cmd_create_server(&Lex->server_options);
            }
@@ -7010,7 +7012,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($1->srs_name.str != nullptr)
              {
                MYSQL_YYABORT_ERROR(ER_SRS_MULTIPLE_ATTRIBUTE_DEFINITIONS, MYF(0),
-@@ -3405,8 +6696,7 @@ srs_attributes:
+@@ -3407,8 +6696,7 @@ srs_attributes:
                $1->srs_name= $3;
              }
            }
@@ -7020,7 +7022,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($1->definition.str != nullptr)
              {
                MYSQL_YYABORT_ERROR(ER_SRS_MULTIPLE_ATTRIBUTE_DEFINITIONS, MYF(0),
-@@ -3417,9 +6707,7 @@ srs_attributes:
+@@ -3419,9 +6707,7 @@ srs_attributes:
                $1->definition= $3;
              }
            }
@@ -7031,7 +7033,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($1->organization.str != nullptr)
              {
                MYSQL_YYABORT_ERROR(ER_SRS_MULTIPLE_ATTRIBUTE_DEFINITIONS, MYF(0),
-@@ -3431,8 +6719,7 @@ srs_attributes:
+@@ -3433,8 +6719,7 @@ srs_attributes:
                $1->organization_coordsys_id= $6;
              }
            }
@@ -7041,7 +7043,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($1->description.str != nullptr)
              {
                MYSQL_YYABORT_ERROR(ER_SRS_MULTIPLE_ATTRIBUTE_DEFINITIONS, MYF(0),
-@@ -3443,88 +6730,70 @@ srs_attributes:
+@@ -3445,240 +6730,187 @@ srs_attributes:
                $1->description= $3;
              }
            }
@@ -7150,13 +7152,18 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex=Lex;
  
-@@ -3537,150 +6806,111 @@ event_tail:
-                                   Event_parse_data::ON_COMPLETION_DROP;
+             lex->stmt_definition_begin= @1.cpp.start;
+             lex->create_info->options= $2 ? HA_LEX_CREATE_IF_NOT_EXISTS : 0;
++            if (!(lex->event_parse_data= new (thd->mem_root) Event_parse_data()))
++              MYSQL_YYABORT;
++            lex->event_parse_data->identifier= $3;
++            lex->event_parse_data->on_completion=
++                                  Event_parse_data::ON_COMPLETION_DROP;
  
              lex->sql_command= SQLCOM_CREATE_EVENT;
--            /* We need that for disallowing subqueries */
-+            
-             MAKE_CMD_DDL_DUMMY();
+-            assert(lex->m_sql_cmd == nullptr);
+-            lex->m_sql_cmd = make_create_event_sql_cmd(thd, $3);
+-            if (lex->m_sql_cmd == nullptr) { YYABORT; }
 -          }
 -          ON_SYM SCHEDULE_SYM ev_schedule_time
 -          opt_ev_on_completion
@@ -7168,6 +7175,8 @@ index 64b26b3ac2d..82e1d9aa949 100644
 -              sql_command is set here because some rules in ev_sql_stmt
 -              can overwrite it
 -            */
++            
++            MAKE_CMD_DDL_DUMMY();
 +          }ON_SYM SCHEDULE_SYM ev_schedule_time opt_ev_on_completion opt_ev_status opt_ev_comment DO_SYM ev_sql_stmt {
 +            
              Lex->sql_command= SQLCOM_CREATE_EVENT;
@@ -7183,18 +7192,21 @@ index 64b26b3ac2d..82e1d9aa949 100644
 +EVERY_SYM expr interval {
              ITEMIZE($2, &$2);
  
-             Lex->event_parse_data->item_expression= $2;
-             Lex->event_parse_data->interval= $3;
+-            get_event_parse_data(Lex)->item_expression= $2;
+-            get_event_parse_data(Lex)->interval= $3;
 -          }
 -          ev_starts
 -          ev_ends
 -        | AT_SYM expr
 -          {
++            Lex->event_parse_data->item_expression= $2;
++            Lex->event_parse_data->interval= $3;
 +          }ev_starts ev_ends 
 +|AT_SYM expr {
              ITEMIZE($2, &$2);
  
-             Lex->event_parse_data->item_execute_at= $2;
+-            get_event_parse_data(Lex)->item_execute_at= $2;
++            Lex->event_parse_data->item_execute_at= $2;
            }
 -        ;
 +;
@@ -7203,10 +7215,12 @@ index 64b26b3ac2d..82e1d9aa949 100644
 -          %empty { $$= 0; }
 -        | ENABLE_SYM
 -          {
+-            get_event_parse_data(Lex)->status= Event_parse_data::ENABLED;
+-            get_event_parse_data(Lex)->status_changed= true;
 +%empty { $$= 0; }
 +|ENABLE_SYM {
-             Lex->event_parse_data->status= Event_parse_data::ENABLED;
-             Lex->event_parse_data->status_changed= true;
++            Lex->event_parse_data->status= Event_parse_data::ENABLED;
++            Lex->event_parse_data->status_changed= true;
              $$= 1;
            }
 -        | DISABLE_SYM ON_SYM SLAVE
@@ -7214,22 +7228,28 @@ index 64b26b3ac2d..82e1d9aa949 100644
 +|DISABLE_SYM ON_SYM SLAVE {
              push_deprecated_warn(YYTHD, "<CREATE|ALTER> EVENT ... DISABLE ON SLAVE",
                                          "<CREATE|ALTER> EVENT ... DISABLE ON REPLICA");
-             Lex->event_parse_data->status= Event_parse_data::REPLICA_SIDE_DISABLED;
-             Lex->event_parse_data->status_changed= true;
+-            get_event_parse_data(Lex)->status= Event_parse_data::REPLICA_SIDE_DISABLED;
+-            get_event_parse_data(Lex)->status_changed= true;
++            Lex->event_parse_data->status= Event_parse_data::REPLICA_SIDE_DISABLED;
++            Lex->event_parse_data->status_changed= true;
              $$= 1;
            }
 -        | DISABLE_SYM ON_SYM REPLICA_SYM
 -          {
+-            get_event_parse_data(Lex)->status= Event_parse_data::REPLICA_SIDE_DISABLED;
+-            get_event_parse_data(Lex)->status_changed= true;
 +|DISABLE_SYM ON_SYM REPLICA_SYM {
-             Lex->event_parse_data->status= Event_parse_data::REPLICA_SIDE_DISABLED;
-             Lex->event_parse_data->status_changed= true;
++            Lex->event_parse_data->status= Event_parse_data::REPLICA_SIDE_DISABLED;
++            Lex->event_parse_data->status_changed= true;
              $$= 1;
            }
 -        | DISABLE_SYM
 -          {
+-            get_event_parse_data(Lex)->status= Event_parse_data::DISABLED;
+-            get_event_parse_data(Lex)->status_changed= true;
 +|DISABLE_SYM {
-             Lex->event_parse_data->status= Event_parse_data::DISABLED;
-             Lex->event_parse_data->status_changed= true;
++            Lex->event_parse_data->status= Event_parse_data::DISABLED;
++            Lex->event_parse_data->status_changed= true;
              $$= 1;
            }
 -        ;
@@ -7242,14 +7262,16 @@ index 64b26b3ac2d..82e1d9aa949 100644
              Item *item= NEW_PTN Item_func_now_local(0);
              if (item == nullptr)
                MYSQL_YYABORT;
-             Lex->event_parse_data->item_starts= item;
+-            get_event_parse_data(Lex)->item_starts= item;
++            Lex->event_parse_data->item_starts= item;
            }
 -        | STARTS_SYM expr
 -          {
 +|STARTS_SYM expr {
              ITEMIZE($2, &$2);
  
-             Lex->event_parse_data->item_starts= $2;
+-            get_event_parse_data(Lex)->item_starts= $2;
++            Lex->event_parse_data->item_starts= $2;
            }
 -        ;
 +;
@@ -7262,7 +7284,8 @@ index 64b26b3ac2d..82e1d9aa949 100644
 +|ENDS_SYM expr {
              ITEMIZE($2, &$2);
  
-             Lex->event_parse_data->item_ends= $2;
+-            get_event_parse_data(Lex)->item_ends= $2;
++            Lex->event_parse_data->item_ends= $2;
            }
 -        ;
 +;
@@ -7278,15 +7301,17 @@ index 64b26b3ac2d..82e1d9aa949 100644
  ev_on_completion:
 -          ON_SYM COMPLETION_SYM PRESERVE_SYM
 -          {
+-            get_event_parse_data(Lex)->on_completion=
 +ON_SYM COMPLETION_SYM PRESERVE_SYM {
-             Lex->event_parse_data->on_completion=
++            Lex->event_parse_data->on_completion=
                                    Event_parse_data::ON_COMPLETION_PRESERVE;
              $$= 1;
            }
 -        | ON_SYM COMPLETION_SYM NOT_SYM PRESERVE_SYM
 -          {
+-            get_event_parse_data(Lex)->on_completion=
 +|ON_SYM COMPLETION_SYM NOT_SYM PRESERVE_SYM {
-             Lex->event_parse_data->on_completion=
++            Lex->event_parse_data->on_completion=
                                    Event_parse_data::ON_COMPLETION_DROP;
              $$= 1;
            }
@@ -7297,9 +7322,10 @@ index 64b26b3ac2d..82e1d9aa949 100644
 -          %empty { $$= 0; }
 -        | COMMENT_SYM TEXT_STRING_sys
 -          {
+-            get_event_parse_data(Lex)->comment= {$2.str,$2.length};
 +%empty { $$= 0; }
 +|COMMENT_SYM TEXT_STRING_sys {
-             Lex->event_parse_data->comment= $2;
++            Lex->event_parse_data->comment= $2;
              $$= 1;
            }
 -        ;
@@ -7332,7 +7358,16 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (lex->sphead)
              {
                my_error(ER_EVENT_RECURSION_FORBIDDEN, MYF(0));
-@@ -3699,46 +6929,40 @@ ev_sql_stmt:
+@@ -3687,7 +6919,7 @@ ev_sql_stmt:
+ 
+             sp_head *sp= sp_start_parsing(thd,
+                                           enum_sp_type::EVENT,
+-                                          get_event_parse_data(lex)->identifier);
++                                          lex->event_parse_data->identifier);
+ 
+             if (!sp)
+               MYSQL_YYABORT;
+@@ -3697,46 +6929,40 @@ ev_sql_stmt:
              memset(&lex->sp_chistics, 0, sizeof(st_sp_chistics));
              sp->m_chistics= &lex->sp_chistics;
  
@@ -7356,8 +7391,9 @@ index 64b26b3ac2d..82e1d9aa949 100644
              sp_finish_parsing(thd);
  
 -            lex->sp_chistics.suid= SP_IS_SUID;  //always the definer!
+-            get_event_parse_data(lex)->body_changed= true;
 +            lex->sp_chistics.suid= SP_IS_SUID;  
-             lex->event_parse_data->body_changed= true;
++            lex->event_parse_data->body_changed= true;
            }
 -        ;
 +;
@@ -7399,7 +7435,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (!$1.str ||
                  (check_and_convert_db_name(&$1, false) != Ident_name_check::OK))
                MYSQL_YYABORT;
-@@ -3751,8 +6975,7 @@ sp_name:
+@@ -3749,8 +6975,7 @@ sp_name:
                MYSQL_YYABORT;
              $$->init_qname(YYTHD);
            }
@@ -7409,7 +7445,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              LEX_CSTRING db;
-@@ -3767,85 +6990,69 @@ sp_name:
+@@ -3765,85 +6990,69 @@ sp_name:
                MYSQL_YYABORT;
              $$->init_qname(thd);
            }
@@ -7531,7 +7567,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
  
-@@ -3892,22 +7099,20 @@ sp_fdparam:
+@@ -3890,22 +7099,20 @@ sp_fdparam:
              spvar->field_def.field_name= spvar->name.str;
              spvar->field_def.is_nullable= true;
            }
@@ -7562,7 +7598,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -3953,43 +7158,38 @@ sp_pdparam:
+@@ -3951,43 +7158,38 @@ sp_pdparam:
              spvar->field_def.field_name= spvar->name.str;
              spvar->field_def.is_nullable= true;
            }
@@ -7623,7 +7659,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                my_error(ER_SP_CURSOR_AFTER_HANDLER, MYF(0));
                MYSQL_YYABORT;
              }
-@@ -3998,15 +7198,10 @@ sp_decls:
+@@ -3996,15 +7198,10 @@ sp_decls:
              $$.hndlrs= $1.hndlrs + $2.hndlrs;
              $$.curs= $1.curs + $2.curs;
            }
@@ -7641,7 +7677,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              sp_head *sp= lex->sphead;
-@@ -4048,8 +7243,8 @@ sp_decl:
+@@ -4046,8 +7243,8 @@ sp_decl:
                  MYSQL_YYABORT;
              }
  
@@ -7652,7 +7688,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              for (uint i = num_vars-$2 ; i < num_vars ; i++)
              {
-@@ -4081,7 +7276,7 @@ sp_decl:
+@@ -4079,7 +7276,7 @@ sp_decl:
                spvar->field_def.field_name= spvar->name.str;
                spvar->field_def.is_nullable= true;
  
@@ -7661,7 +7697,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
                sp_instr_set *is= NEW_PTN sp_instr_set(sp->instructions(),
                                                       lex,
-@@ -4100,8 +7295,7 @@ sp_decl:
+@@ -4098,8 +7295,7 @@ sp_decl:
              $$.vars= $2;
              $$.conds= $$.hndlrs= $$.curs= 0;
            }
@@ -7671,7 +7707,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -4113,12 +7307,11 @@ sp_decl:
+@@ -4111,12 +7307,11 @@ sp_decl:
              }
              if(pctx->add_condition(thd, $2, $5))
                MYSQL_YYABORT;
@@ -7686,7 +7722,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              sp_head *sp= lex->sphead;
-@@ -4141,7 +7334,7 @@ sp_decl:
+@@ -4139,7 +7334,7 @@ sp_decl:
  
              if ($2 == sp_handler::CONTINUE)
              {
@@ -7695,7 +7731,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
                if (sp->m_parser_data.add_backpatch_entry(
                      i, handler_pctx->last_label()))
-@@ -4156,15 +7349,13 @@ sp_decl:
+@@ -4154,15 +7349,13 @@ sp_decl:
                MYSQL_YYABORT;
              }
  
@@ -7714,7 +7750,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              if ($2 == sp_handler::CONTINUE)
              {
-@@ -4175,7 +7366,7 @@ sp_decl:
+@@ -4173,7 +7366,7 @@ sp_decl:
                  MYSQL_YYABORT;
              }
              else
@@ -7723,7 +7759,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                sp_instr_hreturn *i=
                  NEW_PTN sp_instr_hreturn(sp->instructions(), pctx);
  
-@@ -4192,20 +7383,14 @@ sp_decl:
+@@ -4190,20 +7383,14 @@ sp_decl:
              $$.vars= $$.conds= $$.curs= 0;
              $$.hndlrs= 1;
            }
@@ -7746,7 +7782,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              MAKE_CMD($6);
  
              THD *thd= YYTHD;
-@@ -4266,24 +7451,20 @@ sp_decl:
+@@ -4264,24 +7451,20 @@ sp_decl:
              $$.vars= $$.conds= $$.hndlrs= 0;
              $$.curs= 1;
            }
@@ -7779,7 +7815,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -4302,11 +7483,10 @@ sp_hcond_element:
+@@ -4300,11 +7483,10 @@ sp_hcond_element:
                i->add_condition($1);
              }
            }
@@ -7793,7 +7829,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($1 == 0)
              {
                my_error(ER_WRONG_VALUE, MYF(0), "CONDITION", "0");
-@@ -4316,20 +7496,13 @@ sp_cond:
+@@ -4314,20 +7496,13 @@ sp_cond:
              if ($$ == nullptr)
                MYSQL_YYABORT;
            }
@@ -7819,7 +7855,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (!is_sqlstate_valid(&$3) || is_sqlstate_completion($3.str))
              {
                my_error(ER_SP_BAD_SQLSTATE, MYF(0), $3.str);
-@@ -4339,20 +7512,18 @@ sqlstate:
+@@ -4337,20 +7512,18 @@ sqlstate:
              if ($$ == nullptr)
                MYSQL_YYABORT;
            }
@@ -7846,7 +7882,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
  
-@@ -4364,29 +7535,25 @@ sp_hcond:
+@@ -4362,29 +7535,25 @@ sp_hcond:
                MYSQL_YYABORT;
              }
            }
@@ -7881,7 +7917,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
  
-@@ -4395,17 +7562,16 @@ signal_stmt:
+@@ -4393,17 +7562,16 @@ signal_stmt:
              if (lex->m_sql_cmd == nullptr)
                MYSQL_YYABORT;
            }
@@ -7902,7 +7938,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                my_error(ER_SP_COND_MISMATCH, MYF(0), $1.str);
                MYSQL_YYABORT;
              }
-@@ -4424,167 +7590,127 @@ signal_value:
+@@ -4422,167 +7590,127 @@ signal_value:
              }
              $$= cond;
            }
@@ -8118,7 +8154,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              if (!sp)
              {
-@@ -4602,85 +7728,60 @@ simple_target_specification:
+@@ -4600,85 +7728,60 @@ simple_target_specification:
              if ($$ == nullptr)
                MYSQL_YYABORT;
            }
@@ -8232,7 +8268,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
-@@ -4698,9 +7799,8 @@ sp_decl_idents:
+@@ -4696,9 +7799,8 @@ sp_decl_idents:
                                 sp_variable::MODE_IN);
              $$= 1;
            }
@@ -8244,7 +8280,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
-@@ -4718,59 +7818,52 @@ sp_decl_idents:
+@@ -4716,59 +7818,52 @@ sp_decl_idents:
                                 sp_variable::MODE_IN);
              $$= $1 + 1;
            }
@@ -8326,7 +8362,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($2 != nullptr)
                MAKE_CMD($2);
  
-@@ -4780,22 +7873,18 @@ sp_proc_stmt_statement:
+@@ -4778,22 +7873,18 @@ sp_proc_stmt_statement:
  
              sp->m_flags|= sp_get_flags_for_command(lex);
  
@@ -8352,7 +8388,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
                LEX_CSTRING query=
                  make_string(thd,
-@@ -4805,7 +7894,7 @@ sp_proc_stmt_statement:
+@@ -4803,7 +7894,7 @@ sp_proc_stmt_statement:
                if (!query.str)
                  MYSQL_YYABORT;
  
@@ -8361,7 +8397,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
                sp_instr_stmt *i=
                  NEW_PTN sp_instr_stmt(sp->instructions(), lex, query);
-@@ -4817,26 +7906,23 @@ sp_proc_stmt_statement:
+@@ -4815,26 +7906,23 @@ sp_proc_stmt_statement:
              if (sp->restore_lex(thd))
                MYSQL_YYABORT;
            }
@@ -8392,7 +8428,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              LEX_CSTRING expr_query= EMPTY_CSTR;
  
-@@ -4849,7 +7935,7 @@ sp_proc_stmt_return:
+@@ -4847,7 +7935,7 @@ sp_proc_stmt_return:
                  MYSQL_YYABORT;
              }
  
@@ -8401,7 +8437,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              if (sp->m_type != enum_sp_type::FUNCTION)
              {
-@@ -4857,11 +7943,11 @@ sp_proc_stmt_return:
+@@ -4855,11 +7943,11 @@ sp_proc_stmt_return:
                MYSQL_YYABORT;
              }
  
@@ -8415,7 +8451,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              sp_instr_freturn *i=
                NEW_PTN sp_instr_freturn(sp->instructions(), lex, $3, expr_query,
-@@ -4874,10 +7960,10 @@ sp_proc_stmt_return:
+@@ -4872,10 +7960,10 @@ sp_proc_stmt_return:
                MYSQL_YYABORT;
              }
            }
@@ -8428,7 +8464,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              sp_head *sp= lex->sphead;
-@@ -4886,9 +7972,7 @@ sp_proc_stmt_unlabeled:
+@@ -4884,9 +7972,7 @@ sp_proc_stmt_unlabeled:
              pctx->push_label(thd,
                               EMPTY_CSTR,
                               sp->instructions());
@@ -8439,7 +8475,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -4896,11 +7980,10 @@ sp_proc_stmt_unlabeled:
+@@ -4894,11 +7980,10 @@ sp_proc_stmt_unlabeled:
              sp->m_parser_data.do_backpatch(pctx->pop_label(),
                                             sp->instructions());
            }
@@ -8453,7 +8489,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= Lex;
              sp_head *sp = lex->sphead;
-@@ -4915,14 +7998,7 @@ sp_proc_stmt_leave:
+@@ -4913,14 +7998,7 @@ sp_proc_stmt_leave:
  
              uint ip= sp->instructions();
  
@@ -8469,7 +8505,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              bool exclusive= (lab->type == sp_label::BEGIN);
  
              size_t n= pctx->diff_handlers(lab->ctx, exclusive);
-@@ -4948,16 +8024,15 @@ sp_proc_stmt_leave:
+@@ -4946,16 +8024,15 @@ sp_proc_stmt_leave:
              sp_instr_jump *i= NEW_PTN sp_instr_jump(ip, pctx);
  
              if (!i ||
@@ -8489,7 +8525,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
-@@ -4972,7 +8047,7 @@ sp_proc_stmt_iterate:
+@@ -4970,7 +8047,7 @@ sp_proc_stmt_iterate:
  
              uint ip= sp->instructions();
  
@@ -8498,7 +8534,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              size_t n= pctx->diff_handlers(lab->ctx, false);
  
              if (n)
-@@ -4983,7 +8058,7 @@ sp_proc_stmt_iterate:
+@@ -4981,7 +8058,7 @@ sp_proc_stmt_iterate:
                  MYSQL_YYABORT;
              }
  
@@ -8507,7 +8543,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              n= pctx->diff_cursors(lab->ctx, false);
  
              if (n)
-@@ -4994,17 +8069,16 @@ sp_proc_stmt_iterate:
+@@ -4992,17 +8069,16 @@ sp_proc_stmt_iterate:
                  MYSQL_YYABORT;
              }
  
@@ -8528,7 +8564,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
-@@ -5023,11 +8097,10 @@ sp_proc_stmt_open:
+@@ -5021,11 +8097,10 @@ sp_proc_stmt_open:
              if (!i || sp->add_instr(thd, i))
                MYSQL_YYABORT;
            }
@@ -8542,7 +8578,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
-@@ -5045,14 +8118,11 @@ sp_proc_stmt_fetch:
+@@ -5043,14 +8118,11 @@ sp_proc_stmt_fetch:
  
              if (!i || sp->add_instr(thd, i))
                MYSQL_YYABORT;
@@ -8560,7 +8596,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
-@@ -5071,17 +8141,16 @@ sp_proc_stmt_close:
+@@ -5069,17 +8141,16 @@ sp_proc_stmt_close:
              if (!i || sp->add_instr(thd, i))
                MYSQL_YYABORT;
            }
@@ -8584,7 +8620,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -5093,13 +8162,12 @@ sp_fetch_list:
+@@ -5091,13 +8162,12 @@ sp_fetch_list:
                MYSQL_YYABORT;
              }
  
@@ -8600,7 +8636,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -5111,23 +8179,21 @@ sp_fetch_list:
+@@ -5109,23 +8179,21 @@ sp_fetch_list:
                MYSQL_YYABORT;
              }
  
@@ -8628,7 +8664,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              ITEMIZE($2, &$2);
  
              THD *thd= YYTHD;
-@@ -5135,7 +8201,7 @@ sp_if:
+@@ -5133,7 +8201,7 @@ sp_if:
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
  
@@ -8637,7 +8673,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              LEX_CSTRING expr_query= EMPTY_CSTR;
              const char *expr_start_ptr= @0.raw.end;
-@@ -5151,7 +8217,7 @@ sp_if:
+@@ -5149,7 +8217,7 @@ sp_if:
                NEW_PTN sp_instr_jump_if_not(sp->instructions(), lex,
                                             $2, expr_query);
  
@@ -8646,7 +8682,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              if (i == nullptr ||
                  sp->m_parser_data.add_backpatch_entry(
-@@ -5162,10 +8228,7 @@ sp_if:
+@@ -5160,10 +8228,7 @@ sp_if:
              {
                MYSQL_YYABORT;
              }
@@ -8658,7 +8694,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              sp_head *sp= lex->sphead;
-@@ -5181,9 +8244,7 @@ sp_if:
+@@ -5179,9 +8244,7 @@ sp_if:
  
              sp->m_parser_data.add_backpatch_entry(
                i, pctx->push_label(thd, EMPTY_CSTR, 0));
@@ -8669,7 +8705,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -5191,39 +8252,36 @@ sp_if:
+@@ -5189,39 +8252,36 @@ sp_if:
              sp->m_parser_data.do_backpatch(pctx->pop_label(),
                                             sp->instructions());
            }
@@ -8721,7 +8757,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              LEX_CSTRING case_expr_query= EMPTY_CSTR;
              const char *expr_start_ptr= @1.raw.end;
-@@ -5235,7 +8293,7 @@ simple_case_stmt:
+@@ -5233,7 +8293,7 @@ simple_case_stmt:
                  MYSQL_YYABORT;
              }
  
@@ -8730,7 +8766,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
              int case_expr_id= pctx->push_case_expr_id();
-@@ -5243,7 +8301,7 @@ simple_case_stmt:
+@@ -5241,7 +8301,7 @@ simple_case_stmt:
              if (case_expr_id < 0)
                MYSQL_YYABORT;
  
@@ -8739,7 +8775,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              sp_instr_set_case_expr *i=
                NEW_PTN sp_instr_set_case_expr(sp->instructions(), lex,
-@@ -5256,52 +8314,38 @@ simple_case_stmt:
+@@ -5254,52 +8314,38 @@ simple_case_stmt:
              {
                MYSQL_YYABORT;
              }
@@ -8806,7 +8842,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              ITEMIZE($3, &$3);
  
-@@ -5310,7 +8354,7 @@ simple_when_clause:
+@@ -5308,7 +8354,7 @@ simple_when_clause:
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
  
@@ -8815,7 +8851,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              LEX_CSTRING when_expr_query= EMPTY_CSTR;
              const char *expr_start_ptr= @1.raw.end;
-@@ -5322,7 +8366,7 @@ simple_when_clause:
+@@ -5320,7 +8366,7 @@ simple_when_clause:
                  MYSQL_YYABORT;
              }
  
@@ -8824,7 +8860,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              sp_instr_jump_case_when *i =
                NEW_PTN sp_instr_jump_case_when(sp->instructions(), lex,
-@@ -5339,26 +8383,20 @@ simple_when_clause:
+@@ -5337,26 +8383,20 @@ simple_when_clause:
              {
                MYSQL_YYABORT;
              }
@@ -8855,7 +8891,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              ITEMIZE($3, &$3);
  
              THD *thd= YYTHD;
-@@ -5366,7 +8404,7 @@ searched_when_clause:
+@@ -5364,7 +8404,7 @@ searched_when_clause:
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
  
@@ -8864,7 +8900,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              LEX_CSTRING when_query= EMPTY_CSTR;
              const char *expr_start_ptr= @1.raw.end;
-@@ -5378,7 +8416,7 @@ searched_when_clause:
+@@ -5376,7 +8416,7 @@ searched_when_clause:
                  MYSQL_YYABORT;
              }
  
@@ -8873,7 +8909,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              sp_instr_jump_if_not *i=
                NEW_PTN sp_instr_jump_if_not(sp->instructions(), lex, $3,
-@@ -5393,18 +8431,14 @@ searched_when_clause:
+@@ -5391,18 +8431,14 @@ searched_when_clause:
              {
                MYSQL_YYABORT;
              }
@@ -8895,7 +8931,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
-@@ -5417,12 +8451,11 @@ else_clause_opt:
+@@ -5415,12 +8451,11 @@ else_clause_opt:
              if (!i || sp->add_instr(thd, i))
                MYSQL_YYABORT;
            }
@@ -8911,7 +8947,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -5438,9 +8471,7 @@ sp_labeled_control:
+@@ -5436,9 +8471,7 @@ sp_labeled_control:
                lab= pctx->push_label(YYTHD, $1, sp->instructions());
                lab->type= sp_label::ITERATION;
              }
@@ -8922,7 +8958,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -5456,16 +8487,15 @@ sp_labeled_control:
+@@ -5454,16 +8487,15 @@ sp_labeled_control:
              }
              sp->m_parser_data.do_backpatch(lab, sp->instructions());
            }
@@ -8944,7 +8980,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -5479,9 +8509,7 @@ sp_labeled_block:
+@@ -5477,9 +8509,7 @@ sp_labeled_block:
  
              lab= pctx->push_label(YYTHD, $1, sp->instructions());
              lab->type= sp_label::BEGIN;
@@ -8955,7 +8991,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
              sp_label *lab= pctx->pop_label();
-@@ -5495,10 +8523,10 @@ sp_labeled_block:
+@@ -5493,10 +8523,10 @@ sp_labeled_block:
                }
              }
            }
@@ -8968,7 +9004,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
-@@ -5507,19 +8535,14 @@ sp_unlabeled_block:
+@@ -5505,19 +8535,14 @@ sp_unlabeled_block:
                pctx->push_label(YYTHD, EMPTY_CSTR, sp->instructions());
  
              lab->type= sp_label::BEGIN;
@@ -8991,7 +9027,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              sp_pcontext *parent_pctx= lex->get_sp_current_parsing_ctx();
-@@ -5528,17 +8551,13 @@ sp_block_content:
+@@ -5526,17 +8551,13 @@ sp_block_content:
                parent_pctx->push_context(thd, sp_pcontext::REGULAR_SCOPE);
  
              lex->set_sp_current_parsing_ctx(child_pctx);
@@ -9011,7 +9047,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              sp->m_parser_data.do_backpatch(pctx->last_label(),
                                             sp->instructions());
  
-@@ -5561,12 +8580,10 @@ sp_block_content:
+@@ -5559,12 +8580,10 @@ sp_block_content:
  
              lex->set_sp_current_parsing_ctx(pctx->pop_context());
            }
@@ -9026,7 +9062,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
-@@ -5578,16 +8595,13 @@ sp_unlabeled_control:
+@@ -5576,16 +8595,13 @@ sp_unlabeled_control:
              if (!i || sp->add_instr(thd, i))
                MYSQL_YYABORT;
            }
@@ -9045,7 +9081,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              ITEMIZE($3, &$3);
  
              THD *thd= YYTHD;
-@@ -5595,7 +8609,7 @@ sp_unlabeled_control:
+@@ -5593,7 +8609,7 @@ sp_unlabeled_control:
              sp_head *sp= lex->sphead;
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
  
@@ -9054,7 +9090,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              LEX_CSTRING expr_query= EMPTY_CSTR;
              const char *expr_start_ptr= @1.raw.end;
-@@ -5607,14 +8621,14 @@ sp_unlabeled_control:
+@@ -5605,14 +8621,14 @@ sp_unlabeled_control:
                  MYSQL_YYABORT;
              }
  
@@ -9071,7 +9107,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                  sp->m_parser_data.add_backpatch_entry(i, pctx->last_label()) ||
                  sp->m_parser_data.new_cont_backpatch() ||
                  sp->m_parser_data.add_cont_backpatch_entry(i) ||
-@@ -5623,12 +8637,7 @@ sp_unlabeled_control:
+@@ -5621,12 +8637,7 @@ sp_unlabeled_control:
              {
                MYSQL_YYABORT;
              }
@@ -9085,7 +9121,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
-@@ -5642,18 +8651,13 @@ sp_unlabeled_control:
+@@ -5640,18 +8651,13 @@ sp_unlabeled_control:
  
              sp->m_parser_data.do_cont_backpatch(sp->instructions());
            }
@@ -9106,7 +9142,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              ITEMIZE($5, &$5);
  
              THD *thd= YYTHD;
-@@ -5662,7 +8666,7 @@ sp_unlabeled_control:
+@@ -5660,7 +8666,7 @@ sp_unlabeled_control:
              sp_pcontext *pctx= lex->get_sp_current_parsing_ctx();
              uint ip= sp->instructions();
  
@@ -9115,7 +9151,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              LEX_CSTRING expr_query= EMPTY_CSTR;
              const char *expr_start_ptr= @3.raw.end;
-@@ -5674,7 +8678,7 @@ sp_unlabeled_control:
+@@ -5672,7 +8678,7 @@ sp_unlabeled_control:
                  MYSQL_YYABORT;
              }
  
@@ -9124,7 +9160,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              sp_instr_jump_if_not *i=
                NEW_PTN sp_instr_jump_if_not(ip, lex, $5, expr_query,
-@@ -5687,315 +8691,271 @@ sp_unlabeled_control:
+@@ -5685,315 +8691,271 @@ sp_unlabeled_control:
                MYSQL_YYABORT;
              }
  
@@ -9568,7 +9604,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              ulonglong number;
              uint text_shift_number= 0;
              longlong prefix_number;
-@@ -6040,137 +9000,85 @@ size_number:
+@@ -6038,137 +9000,85 @@ size_number:
              }
              $$= number;
            }
@@ -9734,7 +9770,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              switch ($3) {
              case 1:
                $$= enum_key_algorithm::KEY_ALGORITHM_51;
-@@ -6183,12 +9091,11 @@ opt_key_algo:
+@@ -6181,12 +9091,11 @@ opt_key_algo:
                MYSQL_YYABORT;
              }
            }
@@ -9750,7 +9786,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($2 == 0)
              {
                my_error(ER_NO_PARTS_ERROR, MYF(0), "partitions");
-@@ -6196,48 +9103,39 @@ opt_num_parts:
+@@ -6194,48 +9103,39 @@ opt_num_parts:
              }
              $$= $2;
            }
@@ -9812,7 +9848,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($2 == 0)
              {
                my_error(ER_NO_PARTS_ERROR, MYF(0), "subpartitions");
-@@ -6245,208 +9143,163 @@ opt_num_subparts:
+@@ -6243,208 +9143,163 @@ opt_num_subparts:
              }
              $$= $2;
            }
@@ -10092,7 +10128,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ((Lex->create_info->used_fields &
                   HA_CREATE_USED_READ_ONLY) &&
                  (Lex->create_info->schema_read_only !=
-@@ -6458,32 +9311,29 @@ alter_database_option:
+@@ -6456,32 +9311,29 @@ alter_database_option:
              Lex->create_info->schema_read_only = ($4 == Ternary_option::ON);
              Lex->create_info->used_fields |= HA_CREATE_USED_READ_ONLY;
            }
@@ -10136,7 +10172,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (my_strcasecmp(system_charset_info, $1.str, "Y") != 0 &&
                  my_strcasecmp(system_charset_info, $1.str, "N") != 0) {
                my_error(ER_WRONG_VALUE, MYF(0), "argument (should be Y or N)", $1.str);
-@@ -6493,74 +9343,64 @@ create_database_option:
+@@ -6491,74 +9343,64 @@ create_database_option:
              Lex->create_info->encrypt_type= $1;
              Lex->create_info->used_fields |= HA_CREATE_USED_DEFAULT_ENCRYPTION;
            }
@@ -10237,7 +10273,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($3 > std::numeric_limits<std::uint32_t>::max()) {
                YYTHD->syntax_error_at(@3,
                "The valid range for avg_row_length is [0,4294967295]. Error"
-@@ -6569,48 +9409,32 @@ create_table_option:
+@@ -6567,48 +9409,32 @@ create_table_option:
              }
              $$= NEW_PTN PT_create_avg_row_length_option(@$, $3);
            }
@@ -10296,7 +10332,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($3 == 0 || $3 > 0xffff)
              {
                YYTHD->syntax_error_at(@3,
-@@ -6619,71 +9443,55 @@ create_table_option:
+@@ -6617,71 +9443,55 @@ create_table_option:
              }
              $$= NEW_PTN PT_create_stats_stable_pages(@$, $3);
            }
@@ -10387,7 +10423,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($3 > std::numeric_limits<std::uint16_t>::max()) {
                YYTHD->syntax_error_at(@3,
                "The valid range for key_block_size is [0,65535]. Error");
-@@ -6693,27 +9501,22 @@ create_table_option:
+@@ -6691,27 +9501,22 @@ create_table_option:
              $$= NEW_PTN
              PT_create_key_block_size_option(@$, static_cast<std::uint32_t>($3));
            }
@@ -10421,7 +10457,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              switch($1) {
              case 0:
                  $$= Ternary_option::OFF;
-@@ -6726,154 +9529,133 @@ ternary_option:
+@@ -6724,158 +9529,133 @@ ternary_option:
                  MYSQL_YYABORT;
              }
            }
@@ -10524,14 +10560,19 @@ index 64b26b3ac2d..82e1d9aa949 100644
 +;
  
  opt_references:
--           %empty { $$= nullptr; }
--        |  references
+-          %empty { $$= nullptr; }
+-        | references
 -          {
--            /* Currently we ignore FK references here: */
+-            $$= NEW_PTN PT_foreign_key_definition(@$, NULL_STR, NULL_STR,
+-                                                  nullptr, $1.table_name,
+-                                                  $1.reference_list,
+-                                                  $1.fk_match_option,
+-                                                  $1.fk_update_opt,
+-                                                  $1.fk_delete_opt);
 +%empty { $$= nullptr; }
 +|references {
 +            
-             $$= nullptr;
++            $$= nullptr;
            }
 -        ;
 +;
@@ -10638,7 +10679,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              auto *opt_attrs= $9;
              if ($2 != nullptr)
              {
-@@ -6885,64 +9667,54 @@ field_def:
+@@ -6887,64 +9667,54 @@ field_def:
                auto *collation= NEW_PTN PT_collate_column_attr(@2, $2);
                if (opt_attrs == nullptr || collation == nullptr ||
                    opt_attrs->push_back(collation))
@@ -10722,7 +10763,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              const CHARSET_INFO *cs= $3 ?
                get_bin_collation(national_charset_info) : national_charset_info;
              if (cs == nullptr)
-@@ -6950,8 +9722,7 @@ type:
+@@ -6952,8 +9722,7 @@ type:
              $$= NEW_PTN PT_char_type(@$, Char_type::CHAR, $2, cs);
              warn_about_deprecated_national(YYTHD);
            }
@@ -10732,7 +10773,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              const CHARSET_INFO *cs= $2 ?
                get_bin_collation(national_charset_info) : national_charset_info;
              if (cs == nullptr)
-@@ -6959,21 +9730,17 @@ type:
+@@ -6961,21 +9730,17 @@ type:
              $$= NEW_PTN PT_char_type(@$, Char_type::CHAR, cs);
              warn_about_deprecated_national(YYTHD);
            }
@@ -10758,7 +10799,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              const CHARSET_INFO *cs= $3 ?
                get_bin_collation(national_charset_info) : national_charset_info;
              if (cs == nullptr)
-@@ -6981,19 +9748,17 @@ type:
+@@ -6983,23 +9748,17 @@ type:
              $$= NEW_PTN PT_char_type(@$, Char_type::VARCHAR, $2, cs);
              warn_about_deprecated_national(YYTHD);
            }
@@ -10767,6 +10808,10 @@ index 64b26b3ac2d..82e1d9aa949 100644
 +|VARBINARY_SYM field_length {
              $$= NEW_PTN PT_char_type(@$, Char_type::VARCHAR, $2, &my_charset_bin);
            }
+-        | VECTOR_SYM opt_field_length
+-          {
+-            $$= NEW_PTN PT_vector_type(@$, $2);
+-          }
 -        | YEAR_SYM opt_field_length field_options
 -          {
 +|YEAR_SYM opt_field_length field_options {
@@ -10781,7 +10826,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                  my_error(ER_INVALID_YEAR_COLUMN_LENGTH, MYF(0), "YEAR");
                  MYSQL_YYABORT;
                }
-@@ -7005,288 +9770,249 @@ type:
+@@ -7011,288 +9770,249 @@ type:
                             ER_WARN_DEPRECATED_SYNTAX_NO_REPLACEMENT,
                             ER_THD(YYTHD, ER_WARN_DEPRECATED_YEAR_UNSIGNED));
              }
@@ -11178,7 +11223,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                YYTHD->syntax_error_at(@1);
                MYSQL_YYABORT;
              }
-@@ -7294,73 +10020,57 @@ column_attribute_list:
+@@ -7300,73 +10020,57 @@ column_attribute_list:
              $$=
                NEW_PTN Mem_root_array<PT_column_attr_base *>(YYMEM_ROOT);
              if ($$ == nullptr || $$->push_back($1))
@@ -11270,7 +11315,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($2 > std::numeric_limits<gis::srid_t>::max())
              {
                my_error(ER_DATA_OUT_OF_RANGE, MYF(0), "SRID", "SRID");
-@@ -7368,72 +10078,55 @@ column_attribute:
+@@ -7374,72 +10078,55 @@ column_attribute:
              }
              $$= NEW_PTN PT_srid_column_attr(@$, static_cast<gis::srid_t>($2));
            }
@@ -11367,7 +11412,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (!($$=get_charset_by_csname($1.str,MY_CS_PRIMARY,MYF(0))))
              {
                my_error(ER_UNKNOWN_CHARACTER_SET, MYF(0), $1.str);
-@@ -7441,17 +10134,16 @@ charset_name:
+@@ -7447,17 +10134,16 @@ charset_name:
              }
              YYLIP->warn_on_deprecated_charset($$, $1.str);
            }
@@ -11391,7 +11436,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (!($$=get_charset_by_csname($1.str,MY_CS_PRIMARY,MYF(0))) &&
                  !($$=get_old_charset_by_name($1.str)))
              {
-@@ -7459,55 +10151,52 @@ old_or_new_charset_name:
+@@ -7465,55 +10151,52 @@ old_or_new_charset_name:
                MYSQL_YYABORT;
              }
            }
@@ -11466,7 +11511,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              push_deprecated_warn(YYTHD, "UNICODE", "CHARACTER SET charset_name");
              if (!($$= get_charset_by_csname("ucs2", MY_CS_PRIMARY,MYF(0))))
              {
-@@ -7515,224 +10204,195 @@ unicode:
+@@ -7521,224 +10204,195 @@ unicode:
                MYSQL_YYABORT;
              }
            }
@@ -11762,7 +11807,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX_CSTRING plugin_name= {$3.str, $3.length};
              if (!plugin_is_ready(plugin_name, MYSQL_FTPARSER_PLUGIN))
              {
-@@ -7742,147 +10402,117 @@ fulltext_index_option:
+@@ -7748,147 +10402,117 @@ fulltext_index_option:
              else
                $$= NEW_PTN PT_fulltext_index_parser_name(@$, to_lex_cstring($3));
            }
@@ -11963,7 +12008,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              int key_part_length= atoi($3.str);
              if (!key_part_length)
              {
-@@ -7891,62 +10521,52 @@ key_part:
+@@ -7897,62 +10521,52 @@ key_part:
              $$= NEW_PTN PT_key_part_specification(@$, to_lex_cstring($1), $5,
                                                    key_part_length);
              if ($$ == nullptr)
@@ -12045,7 +12090,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$= NEW_PTN PT_alter_table_stmt(
                    @$,
                    YYMEM_ROOT,
-@@ -7956,8 +10576,7 @@ alter_table_stmt:
+@@ -7962,8 +10576,7 @@ alter_table_stmt:
                    $4.flags.lock.get_or_default(),
                    $4.flags.validation.get_or_default());
            }
@@ -12055,7 +12100,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$= NEW_PTN PT_alter_table_standalone_stmt(
                    @$,
                    YYMEM_ROOT,
-@@ -7967,19 +10586,16 @@ alter_table_stmt:
+@@ -7973,19 +10586,16 @@ alter_table_stmt:
                    $4.flags.lock.get_or_default(),
                    $4.flags.validation.get_or_default());
            }
@@ -12079,7 +12124,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex=Lex;
              lex->sql_command=SQLCOM_ALTER_DB;
              lex->name= $3;
-@@ -7987,11 +10603,10 @@ alter_database_stmt:
+@@ -7993,11 +10603,10 @@ alter_database_stmt:
                  lex->copy_db_to(&lex->name.str, &lex->name.length))
                MYSQL_YYABORT;
            }
@@ -12093,7 +12138,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
  
              if (lex->sphead)
-@@ -8000,20 +10615,17 @@ alter_procedure_stmt:
+@@ -8006,20 +10615,17 @@ alter_procedure_stmt:
                MYSQL_YYABORT;
              }
              memset(&lex->sp_chistics, 0, sizeof(st_sp_chistics));
@@ -12117,7 +12162,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
  
              if (lex->sphead)
-@@ -8022,20 +10634,17 @@ alter_function_stmt:
+@@ -8028,20 +10634,17 @@ alter_function_stmt:
                MYSQL_YYABORT;
              }
              memset(&lex->sp_chistics, 0, sizeof(st_sp_chistics));
@@ -12141,7 +12186,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
  
              if (lex->sphead)
-@@ -8044,18 +10653,10 @@ alter_view_stmt:
+@@ -8050,18 +10653,10 @@ alter_view_stmt:
                MYSQL_YYABORT;
              }
              lex->create_view_mode= enum_view_create_mode::VIEW_ALTER;
@@ -12162,7 +12207,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
  
              if (lex->sphead)
-@@ -8065,23 +10666,14 @@ alter_view_stmt:
+@@ -8071,129 +10666,103 @@ alter_view_stmt:
              }
              lex->create_view_algorithm= VIEW_ALGORITHM_UNDEFINED;
              lex->create_view_mode= enum_view_create_mode::VIEW_ALTER;
@@ -12187,13 +12232,14 @@ index 64b26b3ac2d..82e1d9aa949 100644
 -            */
 +ALTER definer_opt EVENT_SYM sp_name {
 +            
- 
-             if (!(Lex->event_parse_data= new (YYTHD->mem_root) Event_parse_data()))
-               MYSQL_YYABORT;
-@@ -8089,108 +10681,88 @@ alter_event_stmt:
++
++            if (!(Lex->event_parse_data= new (YYTHD->mem_root) Event_parse_data()))
++              MYSQL_YYABORT;
++            Lex->event_parse_data->identifier= $4;
  
              Lex->sql_command= SQLCOM_ALTER_EVENT;
-             MAKE_CMD_DDL_DUMMY();
+-            Lex->m_sql_cmd = make_alter_event_sql_cmd(YYTHD, $4);
+-            if (Lex->m_sql_cmd == nullptr) { YYABORT; }
 -          }
 -          ev_alter_on_schedule_completion
 -          opt_ev_rename_to
@@ -12201,6 +12247,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
 -          opt_ev_comment
 -          opt_ev_sql_stmt
 -          {
++            MAKE_CMD_DDL_DUMMY();
 +          }ev_alter_on_schedule_completion opt_ev_rename_to opt_ev_status opt_ev_comment opt_ev_sql_stmt {
              if (!($6 || $7 || $8 || $9 || $10))
              {
@@ -12319,7 +12366,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              if ($4 != nullptr)
              {
-@@ -8201,19 +10773,17 @@ alter_tablespace_stmt:
+@@ -8204,19 +10773,17 @@ alter_tablespace_stmt:
              Lex->m_sql_cmd=
                NEW_PTN Sql_cmd_alter_tablespace{$3, pc};
              if (!Lex->m_sql_cmd)
@@ -12343,7 +12390,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              if ($7 != nullptr)
              {
-@@ -8225,30 +10795,25 @@ alter_undo_tablespace_stmt:
+@@ -8228,30 +10795,25 @@ alter_undo_tablespace_stmt:
                ALTER_UNDO_TABLESPACE, $4,
                {nullptr, 0}, pc, $6};
              if (!cmd)
@@ -12380,7 +12427,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $2->first_factor_auth_info = *$3;
  
              if ($4.str != nullptr) {
-@@ -8258,9 +10823,7 @@ alter_user_stmt:
+@@ -8261,9 +10823,7 @@ alter_user_stmt:
              $2->discard_old_password = false;
              $2->retain_current_password = $5;
            }
@@ -12391,7 +12438,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $2->first_factor_auth_info = *$3;
  
              if ($4.str != nullptr) {
-@@ -8270,13 +10833,11 @@ alter_user_stmt:
+@@ -8273,13 +10833,11 @@ alter_user_stmt:
              $2->discard_old_password = false;
              $2->retain_current_password = $5;
            }
@@ -12407,7 +12454,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              List<LEX_USER> *users= new (YYMEM_ROOT) List<LEX_USER>;
              if (users == nullptr || users->push_back($2))
                MYSQL_YYABORT;
-@@ -8287,8 +10848,7 @@ alter_user_stmt:
+@@ -8290,8 +10848,7 @@ alter_user_stmt:
                                                     role_enum::ROLE_ALL);
                MAKE_CMD(tmp);
            }
@@ -12417,7 +12464,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              List<LEX_USER> *users= new (YYMEM_ROOT) List<LEX_USER>;
              if (users == nullptr || users->push_back($2))
                MYSQL_YYABORT;
-@@ -8299,8 +10859,7 @@ alter_user_stmt:
+@@ -8302,8 +10859,7 @@ alter_user_stmt:
                                                     role_enum::ROLE_NONE);
                MAKE_CMD(tmp);
            }
@@ -12427,7 +12474,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              List<LEX_USER> *users= new (YYMEM_ROOT) List<LEX_USER>;
              if (users == nullptr || users->push_back($2))
                MYSQL_YYABORT;
-@@ -8310,100 +10869,88 @@ alter_user_stmt:
+@@ -8313,100 +10869,88 @@ alter_user_stmt:
                                                   role_enum::ROLE_NAME);
              MAKE_CMD(tmp);
            }
@@ -12555,7 +12602,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              if ($4 == 0 || $4 > UINT_MAX16)
              {
-@@ -8417,70 +10964,60 @@ opt_account_lock_password_expire_option:
+@@ -8420,70 +10964,60 @@ opt_account_lock_password_expire_option:
              lex->alter_password.update_password_expired_fields= true;
              lex->alter_password.use_default_password_lifetime= false;
            }
@@ -12636,7 +12683,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              if ($2 > INT_MAX16) {
                char buf[MAX_BIGINT_WIDTH + 1];
-@@ -8491,8 +11028,7 @@ opt_account_lock_password_expire_option:
+@@ -8494,8 +11028,7 @@ opt_account_lock_password_expire_option:
              lex->alter_password.update_failed_login_attempts= true;
              lex->alter_password.failed_login_attempts= $2;
            }
@@ -12646,7 +12693,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              if ($2 > INT_MAX16) {
                char buf[MAX_BIGINT_WIDTH + 1];
-@@ -8503,55 +11039,49 @@ opt_account_lock_password_expire_option:
+@@ -8506,55 +11039,49 @@ opt_account_lock_password_expire_option:
              lex->alter_password.update_password_lock_time= true;
              lex->alter_password.password_lock_time= $2;
            }
@@ -12717,7 +12764,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX_USER *curr_user;
              if (!(curr_user= LEX_USER::alloc(YYTHD)))
                MYSQL_YYABORT;
-@@ -8559,436 +11089,339 @@ user_func:
+@@ -8562,436 +11089,339 @@ user_func:
              Lex->users_list.push_back(curr_user);
              $$= curr_user;
            }
@@ -13271,7 +13318,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (is_identifier($1, "INPLACE"))
                $$= Alter_info::ALTER_TABLE_ALGORITHM_INPLACE;
              else if (is_identifier($1, "INSTANT"))
-@@ -9001,19 +11434,17 @@ alter_algorithm_option_value:
+@@ -9004,19 +11434,17 @@ alter_algorithm_option_value:
                MYSQL_YYABORT;
              }
            }
@@ -13296,7 +13343,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (is_identifier($1, "NONE"))
                $$= Alter_info::ALTER_TABLE_LOCK_NONE;
              else if (is_identifier($1, "SHARED"))
-@@ -9026,74 +11457,71 @@ alter_lock_option_value:
+@@ -9029,74 +11457,71 @@ alter_lock_option_value:
                MYSQL_YYABORT;
              }
            }
@@ -13407,7 +13454,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              Lex->replica_connection.user = $3.str;
              if ($3.length == 0)
              {
-@@ -9101,11 +11529,10 @@ group_replication_user:
+@@ -9104,11 +11529,10 @@ group_replication_user:
                MYSQL_YYABORT;
              }
            }
@@ -13421,7 +13468,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              Lex->replica_connection.password = $3.str;
              Lex->contains_plaintext_password = true;
              if ($3.length > 32)
-@@ -9114,46 +11541,37 @@ group_replication_password:
+@@ -9117,46 +11541,37 @@ group_replication_password:
                MYSQL_YYABORT;
              }
            }
@@ -13480,7 +13527,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ((Lex->replica_thd_opt & REPLICA_SQL) == REPLICA_SQL &&
                  (Lex->replica_thd_opt & REPLICA_IO) != REPLICA_IO &&
                  (Lex->replica_connection.user ||
-@@ -9164,20 +11582,17 @@ start_replica_stmt:
+@@ -9167,20 +11582,17 @@ start_replica_stmt:
                my_error(ER_SQLTHREAD_WITH_SECURE_REPLICA, MYF(0));
                MYSQL_YYABORT;
              }
@@ -13506,7 +13553,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (($3 & MYSQL_START_TRANS_OPT_READ_WRITE) &&
                  ($3 & MYSQL_START_TRANS_OPT_READ_ONLY))
              {
-@@ -9186,118 +11601,99 @@ start:
+@@ -9189,118 +11601,99 @@ start:
              }
              lex->start_transaction_opt= $3;
            }
@@ -13658,7 +13705,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex=Lex;
              if (((lex->mi.log_file_name || lex->mi.pos) &&
                  lex->mi.gtid) ||
-@@ -9307,8 +11703,8 @@ opt_replica_until:
+@@ -9310,8 +11703,8 @@ opt_replica_until:
                    (lex->mi.relay_log_name && lex->mi.relay_log_pos) ||
                    lex->mi.gtid ||
                    lex->mi.until_after_gaps) ||
@@ -13669,7 +13716,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                  ((lex->mi.log_file_name || lex->mi.pos || lex->mi.relay_log_name
                    || lex->mi.relay_log_pos || lex->mi.gtid)
                   && lex->mi.until_after_gaps))
-@@ -9318,80 +11714,71 @@ opt_replica_until:
+@@ -9321,80 +11714,71 @@ opt_replica_until:
              }
              lex->mi.replica_until= true;
            }
@@ -13777,7 +13824,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($5.param) {
                $$= NEW_PTN PT_analyze_table_stmt(@$, YYMEM_ROOT, $2, $4,
                                                  $5.command, $5.param->num_buckets,
-@@ -9402,22 +11789,19 @@ analyze_table_stmt:
+@@ -9405,22 +11789,19 @@ analyze_table_stmt:
                                                  $5.columns, {nullptr, 0}, false);
              }
            }
@@ -13807,7 +13854,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              int error;
              longlong num= my_strtoll10($2.str, nullptr, &error);
              MYSQL_YYABORT_UNLESS(error <= 0);
-@@ -9430,140 +11814,118 @@ opt_histogram_num_buckets:
+@@ -9433,140 +11814,118 @@ opt_histogram_num_buckets:
              }
              $$= num;
            }
@@ -13991,7 +14038,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex=Lex;
              Query_block *sl= Select;
              if (!sl->add_table_to_list(lex->thd, $1,nullptr,TL_OPTION_UPDATING,
-@@ -9572,266 +11934,165 @@ table_to_table:
+@@ -9575,266 +11934,165 @@ table_to_table:
                                         TL_IGNORE, MDL_EXCLUSIVE))
                MYSQL_YYABORT;
            }
@@ -14317,7 +14364,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              auto item_list= NEW_PTN PT_select_item_list(POS());
              auto asterisk= NEW_PTN Item_asterisk(POS(), nullptr, nullptr);
              if (item_list == nullptr || asterisk == nullptr ||
-@@ -9839,339 +12100,275 @@ query_primary:
+@@ -9842,339 +12100,275 @@ query_primary:
                MYSQL_YYABORT;
              $$= NEW_PTN PT_explicit_table(@$, {}, item_list, $1);
            }
@@ -14775,7 +14822,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($7 == nullptr)
                MYSQL_YYABORT;
              $7->push_front($5);
-@@ -10179,253 +12376,210 @@ predicate:
+@@ -10182,253 +12376,210 @@ predicate:
  
              $$= NEW_PTN Item_func_in(@$, $7, true);
            }
@@ -15112,7 +15159,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              Cast_type cast_type{ITEM_CAST_DATETIME, nullptr, nullptr, $11};
              auto datetime_factor =
                  NEW_PTN Item_func_at_time_zone(@3, $3, $8.str, $7);
-@@ -10433,477 +12587,343 @@ simple_expr:
+@@ -10436,477 +12587,343 @@ simple_expr:
              if ($$ == nullptr)
                MYSQL_YYABORT;
            }
@@ -15700,7 +15747,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$= FT_BOOL;
              DBUG_EXECUTE_IF("simulate_bug18831513",
                              {
-@@ -10912,72 +12932,64 @@ fulltext_options:
+@@ -10915,72 +12932,64 @@ fulltext_options:
                                  YYTHD->syntax_error();
                              });
            }
@@ -15798,7 +15845,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              auto wrapper = make_unique_destroy_only<Json_wrapper>(YYMEM_ROOT);
              if (wrapper == nullptr) YYABORT;
              unique_ptr_destroy_only<Json_array> array{::new (YYMEM_ROOT)
-@@ -10986,8 +12998,7 @@ sum_expr:
+@@ -10989,8 +12998,7 @@ sum_expr:
              $$ = NEW_PTN Item_sum_json_array(@$, $3, $5, std::move(wrapper),
                                               std::move(array));
            }
@@ -15808,7 +15855,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              auto wrapper = make_unique_destroy_only<Json_wrapper>(YYMEM_ROOT);
              if (wrapper == nullptr) YYABORT;
              unique_ptr_destroy_only<Json_object> object{::new (YYMEM_ROOT)
-@@ -10996,163 +13007,125 @@ sum_expr:
+@@ -10999,163 +13007,125 @@ sum_expr:
              $$ = NEW_PTN Item_sum_json_object(
                  @$, $3, $5, $7, std::move(wrapper), std::move(object));
            }
@@ -16019,7 +16066,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              PT_item_list *args= NEW_PTN PT_item_list(@expr, @simple_expr);
              if (args == nullptr ||
                  args->push_back($3) ||
-@@ -11160,130 +13133,104 @@ window_func_call:       // Window functions which do not exist as set functions
+@@ -11163,130 +13133,104 @@ window_func_call:       // Window functions which do not exist as set functions
                MYSQL_YYABORT;
              $$= NEW_PTN Item_nth_value(@$, args, $7 == NFL_FROM_LAST, $8, $9);
            }
@@ -16186,7 +16233,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
               {
                 auto start_bound= NEW_PTN PT_border(POS(), WBT_UNBOUNDED_PRECEDING);
                 auto end_bound= NEW_PTN PT_border(POS(), $3 ? WBT_CURRENT_ROW :
-@@ -11294,241 +13241,203 @@ window_spec_details:
+@@ -11297,241 +13241,203 @@ window_spec_details:
               }
               $$= NEW_PTN PT_window(POS(), $2, $3, frame, $1);
             }
@@ -16496,7 +16543,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
                $$.charset= get_bin_collation($3.charset ? $3.charset :
                    YYTHD->variables.collation_connection);
-@@ -11538,484 +13447,328 @@ cast_type:
+@@ -11541,484 +13447,328 @@ cast_type:
              else
                $$.charset= $3.charset;
            }
@@ -16770,11 +16817,16 @@ index 64b26b3ac2d..82e1d9aa949 100644
 -              All productions from table_factor and joined_table can be escaped,
 -              not only the '{LEFT | RIGHT} [OUTER] JOIN' syntax.
 -            */
--            $$ = $3;
--          }
++table_factor { $$= $1; }
++|joined_table { $$= $1; }
++|'{' OJ_SYM esc_table_reference '}' {
++            
+             $$ = $3;
+           }
 -        ;
--
--esc_table_reference:
++;
+ 
+ esc_table_reference:
 -          table_factor { $$= $1; }
 -        | joined_table { $$= $1; }
 -        ;
@@ -16845,19 +16897,11 @@ index 64b26b3ac2d..82e1d9aa949 100644
 -                    JOIN    t3
 -                   /    \
 -                  t1    t2
-+table_factor { $$= $1; }
-+|joined_table { $$= $1; }
-+|'{' OJ_SYM esc_table_reference '}' {
-+            
-+            $$ = $3;
-+          }
-+;
- 
+-
 -  There is only one rule to pay attention to: If the right-hand side of a
 -  cross join is a join tree, find its left-most leaf (which is a table
 -  name). Then replace this table name with a cross join of the left-hand side
 -  of the top cross join, and the right hand side with the original table.
-+esc_table_reference:
 +table_factor { $$= $1; }
 +|joined_table { $$= $1; }
 +;
@@ -17092,7 +17136,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($8 == NULL_CSTR)
              {
                my_message(ER_TF_MUST_HAVE_ALIAS,
-@@ -12025,217 +13778,186 @@ table_function:
+@@ -12028,217 +13778,186 @@ table_function:
  
              $$= NEW_PTN PT_table_factor_function(@$, $3, $5, $6, to_lex_string($8));
            }
@@ -17375,7 +17419,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$= NEW_PTN List<String>;
              String *s= NEW_PTN String(const_cast<const char *>($1.str),
                                                 $1.length,
-@@ -12243,8 +13965,7 @@ ident_string_list:
+@@ -12246,8 +13965,7 @@ ident_string_list:
              if ($$ == nullptr || s == nullptr || $$->push_back(s))
                MYSQL_YYABORT;
            }
@@ -17385,7 +17429,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              String *s= NEW_PTN String(const_cast<const char *>($3.str),
                                                 $3.length,
                                                 system_charset_info);
-@@ -12252,479 +13973,403 @@ ident_string_list:
+@@ -12255,479 +13973,403 @@ ident_string_list:
                MYSQL_YYABORT;
              $$= $1;
            }
@@ -18039,7 +18083,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex=Lex;
              lex->sql_command = SQLCOM_DROP_TABLE;
              lex->drop_temporary= $2;
-@@ -12737,33 +14382,30 @@ drop_table_stmt:
+@@ -12740,33 +14382,30 @@ drop_table_stmt:
  
              Lex->m_sql_cmd= NEW_PTN Sql_cmd_drop_table();
              if (!Lex->m_sql_cmd)
@@ -18080,7 +18124,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              sp_name *spname;
-@@ -12786,17 +14428,8 @@ drop_function_stmt:
+@@ -12789,17 +14428,8 @@ drop_function_stmt:
              lex->spname= spname;
              MAKE_CMD_DDL_DUMMY();
            }
@@ -18100,7 +18144,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              LEX_STRING db= NULL_STR;
-@@ -12819,18 +14452,16 @@ drop_function_stmt:
+@@ -12822,18 +14452,16 @@ drop_function_stmt:
              lex->spname= spname;
              MAKE_CMD_DDL_DUMMY();
            }
@@ -18123,7 +18167,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex=Lex;
              if (lex->sphead)
              {
-@@ -12842,23 +14473,21 @@ drop_procedure_stmt:
+@@ -12845,23 +14473,21 @@ drop_procedure_stmt:
              lex->spname= $4;
              MAKE_CMD_DDL_DUMMY();
            }
@@ -18152,7 +18196,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              lex->sql_command= SQLCOM_DROP_VIEW;
              lex->drop_if_exists= $3;
-@@ -12869,55 +14498,51 @@ drop_view_stmt:
+@@ -12872,55 +14498,51 @@ drop_view_stmt:
                MYSQL_YYABORT;
              MAKE_CMD_DDL_DUMMY();
            }
@@ -18164,9 +18208,11 @@ index 64b26b3ac2d..82e1d9aa949 100644
 -          {
 +DROP EVENT_SYM if_exists sp_name {
              Lex->drop_if_exists= $3;
-             Lex->spname= $4;
++            Lex->spname= $4;
              Lex->sql_command = SQLCOM_DROP_EVENT;
-             MAKE_CMD_DDL_DUMMY();
+-            Lex->m_sql_cmd = make_drop_event_sql_cmd(YYTHD, $4);
+-            if (Lex->m_sql_cmd == nullptr) { YYABORT; }
++            MAKE_CMD_DDL_DUMMY();
            }
 -        ;
 +;
@@ -18219,7 +18265,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
  
              if ($5 != nullptr)
              {
-@@ -12928,141 +14553,118 @@ drop_undo_tablespace_stmt:
+@@ -12931,141 +14553,118 @@ drop_undo_tablespace_stmt:
              auto cmd= NEW_PTN Sql_cmd_drop_undo_tablespace{
                DROP_UNDO_TABLESPACE, $4, {nullptr, 0},  pc};
              if (!cmd)
@@ -18405,7 +18451,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              DBUG_EXECUTE_IF("bug29614521_simulate_oom",
                               DBUG_SET("+d,simulate_out_of_memory"););
              $$= NEW_PTN PT_insert(@$, false, $1, $2, $3, $5, $6,
-@@ -13073,94 +14675,56 @@ insert_stmt:
+@@ -13076,94 +14675,56 @@ insert_stmt:
              DBUG_EXECUTE_IF("bug29614521_simulate_oom",
                              DBUG_SET("-d,bug29614521_simulate_oom"););
            }
@@ -18512,7 +18558,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
            $$= TL_WRITE_CONCURRENT_DEFAULT;
  
            push_warning_printf(YYTHD, Sql_condition::SL_WARNING,
-@@ -13168,13 +14732,12 @@ insert_lock_option:
+@@ -13171,13 +14732,12 @@ insert_lock_option:
                                ER_THD(YYTHD, ER_WARN_LEGACY_SYNTAX_CONVERTED),
                                "INSERT DELAYED", "INSERT");
          }
@@ -18530,7 +18576,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
            $$= TL_WRITE_DEFAULT;
  
            push_warning_printf(YYTHD, Sql_condition::SL_WARNING,
-@@ -13182,772 +14745,640 @@ replace_lock_option:
+@@ -13185,772 +14745,640 @@ replace_lock_option:
                                ER_THD(YYTHD, ER_WARN_LEGACY_SYNTAX_CONVERTED),
                                "REPLACE DELAYED", "REPLACE");
          }
@@ -19545,7 +19591,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$= NEW_PTN PT_explain(@$, $2.explain_format_type, $2.is_analyze,
                    $2.is_explicit, $3.statement,
                    $2.explain_into_variable_name.length ?
-@@ -13956,54 +15387,46 @@ explain_stmt:
+@@ -13959,54 +15387,46 @@ explain_stmt:
                    std::optional<std::string_view>(std::nullopt),
                    $3.schema_name_for_explain);
            }
@@ -19613,7 +19659,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$.is_explicit = true;
              if (is_identifier($3, "JSON"))
                $$.explain_format_type = Explain_format_type::JSON;
-@@ -14012,25 +15435,23 @@ opt_explain_format:
+@@ -14015,41 +15435,23 @@ opt_explain_format:
              else if (is_identifier($3, "TREE"))
                $$.explain_format_type = Explain_format_type::TREE;
              else {
@@ -19633,12 +19679,29 @@ index 64b26b3ac2d..82e1d9aa949 100644
 +;
  
  opt_explain_options:
--          ANALYZE_SYM opt_explain_format
+-          ANALYZE_SYM opt_explain_format opt_explain_into
 -          {
 +ANALYZE_SYM opt_explain_format {
              $$ = $2;
              $$.is_analyze = true;
-             $$.explain_into_variable_name = NULL_STR;
+-
+-            if ($3.length) {
+-              if (!$$.is_explicit) {
+-                MYSQL_YYABORT_ERROR(
+-                  ER_EXPLAIN_INTO_IMPLICIT_FORMAT_NOT_SUPPORTED, MYF(0));
+-              }
+-              if ($$.explain_format_type != Explain_format_type::JSON) {
+-                if ($$.explain_format_type == Explain_format_type::TREE) {
+-                  MYSQL_YYABORT_ERROR(ER_EXPLAIN_INTO_FORMAT_NOT_SUPPORTED,
+-                                      MYF(0), "TREE");
+-                } else {
+-                  MYSQL_YYABORT_ERROR(ER_EXPLAIN_INTO_FORMAT_NOT_SUPPORTED,
+-                                      MYF(0), "TRADITIONAL");
+-                }
+-              }
+-            }
+-            $$.explain_into_variable_name = $3;
++            $$.explain_into_variable_name = NULL_STR;
            }
 -        | opt_explain_format opt_explain_into
 -          {
@@ -19646,7 +19709,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$ = $1;
              $$.is_analyze = false;
  
-@@ -14051,244 +15472,189 @@ opt_explain_options:
+@@ -14070,250 +15472,189 @@ opt_explain_options:
              }
              $$.explain_into_variable_name = $2;
            }
@@ -19661,6 +19724,9 @@ index 64b26b3ac2d..82e1d9aa949 100644
            }
 -        | INTO '@' ident_or_text
 -          {
+-            if(check_column_name($3.str)) {
+-              MYSQL_YYABORT_ERROR(ER_ILLEGAL_USER_VAR, MYF(0), $3.str);
+-            }
 +|INTO '@' ident_or_text {
              $$ = $3;
            }
@@ -19675,6 +19741,9 @@ index 64b26b3ac2d..82e1d9aa949 100644
            }
 -        | FOR_SYM DATABASE ident_or_text
 -          {
+-            if (check_and_convert_db_name(&$3, false) != Ident_name_check::OK) {
+-              MYSQL_YYABORT;
+-            }
 +|FOR_SYM DATABASE ident_or_text {
              $$ = to_lex_cstring($3);
            }
@@ -19967,7 +20036,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($2 == 0 || $2 > MAX_ALLOWED_FN_EXT_RESET_BIN_LOGS)
              {
                my_error(ER_RESET_SOURCE_TO_VALUE_OUT_OF_RANGE, MYF(0),
-@@ -14298,30 +15664,25 @@ source_reset_options:
+@@ -14323,30 +15664,25 @@ source_reset_options:
              else
                Lex->next_binlog_file_nr = $2;
            }
@@ -20006,7 +20075,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              ITEMIZE($2, &$2);
  
              LEX *lex= Lex;
-@@ -14329,13 +15690,10 @@ purge_option:
+@@ -14354,13 +15690,10 @@ purge_option:
              lex->purge_value_list.push_front($2);
              lex->sql_command= SQLCOM_PURGE_BEFORE;
            }
@@ -20022,7 +20091,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              ITEMIZE($3, &$3);
  
              LEX *lex=Lex;
-@@ -14343,19 +15701,16 @@ kill:
+@@ -14368,19 +15701,16 @@ kill:
              lex->kill_value_list.push_front($3);
              lex->sql_command= SQLCOM_KILL;
            }
@@ -20048,7 +20117,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex=Lex;
              if (lex->sphead) {
                my_error(ER_SP_BADSTATEMENT, MYF(0), "USE");
-@@ -14364,96 +15719,68 @@ use:
+@@ -14389,96 +15719,68 @@ use:
              lex->sql_command=SQLCOM_CHANGE_DB;
              lex->query_block->db= $2.str;
            }
@@ -20189,7 +20258,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (my_strcasecmp(system_charset_info, $1.str, "count") != 0) {
                YYTHD->syntax_error_at(@1, "COUNT expected");
                YYABORT;
-@@ -14464,173 +15791,159 @@ opt_source_count:
+@@ -14489,173 +15791,159 @@ opt_source_count:
              }
              $$= n_files;
            }
@@ -20426,7 +20495,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $3->item_name.copy(@2.cpp.start, length, YYTHD->charset());
  
              $$.set_var= $1;
-@@ -14639,314 +15952,259 @@ load_data_set_elem:
+@@ -14664,314 +15952,259 @@ load_data_set_elem:
                                              length,
                                              YYTHD->charset());
              if ($$.set_expr_str == nullptr)
@@ -20832,7 +20901,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
  
              if (thd->charset_is_system_charset)
-@@ -14972,11 +16230,10 @@ IDENT_sys:
+@@ -14997,11 +16230,10 @@ IDENT_sys:
                  MYSQL_YYABORT;
              }
            }
@@ -20846,7 +20915,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (!strcont($1.str, "\n"))
                $$= $1;
              else
-@@ -14985,11 +16242,10 @@ TEXT_STRING_sys_nonewline:
+@@ -15010,11 +16242,10 @@ TEXT_STRING_sys_nonewline:
                MYSQL_YYABORT;
              }
            }
@@ -20860,7 +20929,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (strcont($1.str, "."))
                $$= $1;
              else
-@@ -14998,11 +16254,10 @@ filter_wild_db_table_string:
+@@ -15023,11 +16254,10 @@ filter_wild_db_table_string:
                MYSQL_YYABORT;
              }
            }
@@ -20874,7 +20943,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
  
              if (thd->charset_is_system_charset)
-@@ -15014,11 +16269,10 @@ TEXT_STRING_sys:
+@@ -15039,11 +16269,10 @@ TEXT_STRING_sys:
                  MYSQL_YYABORT;
              }
            }
@@ -20888,7 +20957,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
  
              if (thd->charset_is_collation_connection)
-@@ -15030,11 +16284,10 @@ TEXT_STRING_literal:
+@@ -15055,11 +16284,10 @@ TEXT_STRING_literal:
                  MYSQL_YYABORT;
              }
            }
@@ -20902,7 +20971,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
  
              if (thd->charset_is_character_set_filesystem)
-@@ -15047,23 +16300,21 @@ TEXT_STRING_filesystem:
+@@ -15072,23 +16300,21 @@ TEXT_STRING_filesystem:
                  MYSQL_YYABORT;
              }
            }
@@ -20933,7 +21002,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
  
              if (thd->charset_is_system_charset)
-@@ -15075,1059 +16326,912 @@ TEXT_STRING_validated:
+@@ -15100,1060 +16326,912 @@ TEXT_STRING_validated:
                  MYSQL_YYABORT;
              }
            }
@@ -21784,6 +21853,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
 -        | XML_SYM
 -        | YEAR_SYM
 -        | ZONE_SYM
+-        | VECTOR_SYM
 -        ;
 -
 -/*
@@ -22636,7 +22706,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
  
              if (lex->sphead)
-@@ -16136,47 +17240,43 @@ lock:
+@@ -16162,47 +17240,43 @@ lock:
                MYSQL_YYABORT;
              }
              lex->sql_command= SQLCOM_LOCK_TABLES;
@@ -22698,7 +22768,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                mdl_lock_type= MDL_SHARED_READ_ONLY;
              }
  
-@@ -16184,17 +17284,16 @@ table_lock:
+@@ -16210,17 +17284,16 @@ table_lock:
                                             mdl_lock_type))
                MYSQL_YYABORT;
            }
@@ -22722,7 +22792,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
  
              if (lex->sphead)
-@@ -16203,44 +17302,36 @@ unlock:
+@@ -16229,44 +17302,36 @@ unlock:
                MYSQL_YYABORT;
              }
              lex->sql_command= SQLCOM_UNLOCK_TABLES;
@@ -22777,7 +22847,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (is_identifier($2, "INNODB"))
              {
                $$= NEW_PTN PT_alter_instance(@$, ROTATE_INNODB_MASTER_KEY, EMPTY_CSTR);
-@@ -16255,22 +17346,19 @@ alter_instance_action:
+@@ -16281,22 +17346,19 @@ alter_instance_action:
                MYSQL_YYABORT;
              }
            }
@@ -22805,7 +22875,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (!is_identifier($2, "INNODB"))
              {
                YYTHD->syntax_error_at(@2);
-@@ -16284,8 +17372,7 @@ alter_instance_action:
+@@ -16310,8 +17372,7 @@ alter_instance_action:
              }
              $$ = NEW_PTN PT_alter_instance(@$, ALTER_INSTANCE_ENABLE_INNODB_REDO, EMPTY_CSTR);
            }
@@ -22815,7 +22885,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (!is_identifier($2, "INNODB"))
              {
                YYTHD->syntax_error_at(@2);
-@@ -16299,91 +17386,60 @@ alter_instance_action:
+@@ -16325,91 +17386,60 @@ alter_instance_action:
              }
              $$ = NEW_PTN PT_alter_instance(@$, ALTER_INSTANCE_DISABLE_INNODB_REDO, EMPTY_CSTR);
            }
@@ -22931,7 +23001,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              lex->grant_if_exists = $2;
              Lex->ignore_unknown_user = $9;
-@@ -16400,14 +17456,11 @@ revoke:
+@@ -16426,14 +17456,11 @@ revoke:
              lex->users_list= *$8;
              MAKE_CMD_DCL_DUMMY();
            }
@@ -22940,16 +23010,15 @@ index 64b26b3ac2d..82e1d9aa949 100644
 +|REVOKE if_exists ALL opt_privileges {
              Lex->grant_if_exists = $2;
              Lex->all_privileges= 1;
--            Lex->grant= GLOBAL_ACLS;
+             Lex->grant= GLOBAL_ACLS;
 -          }
 -          ON_SYM opt_acl_type grant_ident FROM user_list opt_ignore_unknown_user
 -          {
-+            Lex->grant= GLOBAL_ACLS;
 +          }ON_SYM opt_acl_type grant_ident FROM user_list opt_ignore_unknown_user {
              LEX *lex= Lex;
              lex->sql_command= (lex->grant == (GLOBAL_ACLS & ~GRANT_ACL)) ?
                                                              SQLCOM_REVOKE_ALL
-@@ -16422,16 +17475,14 @@ revoke:
+@@ -16448,16 +17475,14 @@ revoke:
              lex->ignore_unknown_user = $11;
              MAKE_CMD_DCL_DUMMY();
            }
@@ -22968,7 +23037,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              lex->grant_if_exists = $2;
              lex->ignore_unknown_user = $8;
-@@ -16441,17 +17492,14 @@ revoke:
+@@ -16467,17 +17492,14 @@ revoke:
              lex->type= TYPE_ENUM_PROXY;
              MAKE_CMD_DCL_DUMMY();
            }
@@ -22989,7 +23058,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              lex->sql_command= SQLCOM_GRANT;
              if (apply_privileges(YYTHD, *$2))
-@@ -16466,13 +17514,10 @@ grant:
+@@ -16492,13 +17514,10 @@ grant:
              lex->users_list= *$7;
              MAKE_CMD_DCL_DUMMY();
            }
@@ -23005,7 +23074,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              lex->sql_command= SQLCOM_GRANT;
              if ($6 != Acl_type::TABLE && !lex->columns.is_empty())
-@@ -16484,8 +17529,7 @@ grant:
+@@ -16510,8 +17529,7 @@ grant:
              lex->users_list= *$9;
              MAKE_CMD_DCL_DUMMY();
            }
@@ -23015,7 +23084,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              lex->sql_command= SQLCOM_GRANT;
              if ($7)
-@@ -16495,144 +17539,105 @@ grant:
+@@ -16521,144 +17539,105 @@ grant:
              lex->type= TYPE_ENUM_PROXY;
              MAKE_CMD_DCL_DUMMY();
            }
@@ -23221,7 +23290,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex=Lex;
              if (lex->x509_subject)
              {
-@@ -16641,8 +17646,7 @@ require_list_element:
+@@ -16667,8 +17646,7 @@ require_list_element:
              }
              lex->x509_subject=$2.str;
            }
@@ -23231,7 +23300,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex=Lex;
              if (lex->x509_issuer)
              {
-@@ -16651,8 +17655,7 @@ require_list_element:
+@@ -16677,8 +17655,7 @@ require_list_element:
              }
              lex->x509_issuer=$2.str;
            }
@@ -23241,7 +23310,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex=Lex;
              if (lex->ssl_cipher)
              {
-@@ -16661,11 +17664,10 @@ require_list_element:
+@@ -16687,11 +17664,10 @@ require_list_element:
              }
              lex->ssl_cipher=$2.str;
            }
@@ -23255,7 +23324,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              size_t dummy;
              if (lex->copy_db_to(&lex->current_query_block()->db, &dummy))
-@@ -16678,8 +17680,7 @@ grant_ident:
+@@ -16704,8 +17680,7 @@ grant_ident:
                MYSQL_YYABORT;
              }
            }
@@ -23265,7 +23334,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              lex->current_query_block()->db = $1.str;
              if (lex->grant == GLOBAL_ACLS)
-@@ -16690,8 +17691,7 @@ grant_ident:
+@@ -16716,8 +17691,7 @@ grant_ident:
                MYSQL_YYABORT;
              }
            }
@@ -23275,7 +23344,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              lex->current_query_block()->db = nullptr;
              if (lex->grant == GLOBAL_ACLS)
-@@ -16702,8 +17702,7 @@ grant_ident:
+@@ -16728,8 +17702,7 @@ grant_ident:
                MYSQL_YYABORT;
              }
            }
@@ -23285,7 +23354,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              auto tmp = NEW_PTN Table_ident(to_lex_cstring($1));
              if (tmp == nullptr)
                MYSQL_YYABORT;
-@@ -16714,8 +17713,7 @@ grant_ident:
+@@ -16740,8 +17713,7 @@ grant_ident:
              if (lex->grant == GLOBAL_ACLS)
                lex->grant =  TABLE_OP_ACLS;
            }
@@ -23295,7 +23364,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              auto schema_name = YYCLIENT_NO_SCHEMA ? LEX_CSTRING{}
                                                    : to_lex_cstring($1.str);
              auto tmp = NEW_PTN Table_ident(schema_name, to_lex_cstring($3));
-@@ -16728,196 +17726,178 @@ grant_ident:
+@@ -16754,196 +17726,178 @@ grant_ident:
              if (lex->grant == GLOBAL_ACLS)
                lex->grant =  TABLE_OP_ACLS;
            }
@@ -23545,7 +23614,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              m->plugin = to_lex_cstring($3);
              m->auth = to_lex_cstring($5);
              m->uses_identified_by_clause = true;
-@@ -16925,14 +17905,13 @@ identified_with_plugin_by_password:
+@@ -16951,14 +17905,13 @@ identified_with_plugin_by_password:
              $$ = m;
              Lex->contains_plaintext_password= true;
            }
@@ -23563,7 +23632,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              m->plugin = to_lex_cstring($3);
              m->uses_identified_by_clause = true;
              m->uses_identified_with_clause = true;
-@@ -16940,34 +17919,28 @@ identified_with_plugin_by_random_password:
+@@ -16966,34 +17919,28 @@ identified_with_plugin_by_random_password:
              $$ = m;
              Lex->contains_plaintext_password= true;
            }
@@ -23604,7 +23673,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$ = $1;
              $1->first_factor_auth_info = *$2;
              $1->current_auth = to_lex_cstring($4);
-@@ -16975,10 +17948,7 @@ alter_user:
+@@ -17001,10 +17948,7 @@ alter_user:
              $1->discard_old_password = false;
              $1->retain_current_password = $5;
            }
@@ -23616,7 +23685,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$ = $1;
              $1->first_factor_auth_info = *$2;
              $1->current_auth = to_lex_cstring($4);
-@@ -16986,24 +17956,19 @@ alter_user:
+@@ -17012,24 +17956,19 @@ alter_user:
              $1->discard_old_password = false;
              $1->retain_current_password = $5;
            }
@@ -23644,7 +23713,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              $$ = $1;
              $1->first_factor_auth_info = *$2;
              $1->uses_replace_clause = true;
-@@ -17011,51 +17976,43 @@ alter_user:
+@@ -17037,51 +17976,43 @@ alter_user:
              $1->retain_current_password = $5;
              $1->current_auth = to_lex_cstring($4);
            }
@@ -23704,7 +23773,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($3 == $6) {
                my_error(ER_MFA_METHODS_IDENTICAL, MYF(0));
                MYSQL_YYABORT;
-@@ -17068,19 +18025,17 @@ alter_user:
+@@ -17094,19 +18025,17 @@ alter_user:
              $7->nth_factor = $6;
              $7->add_factor = true;
              if ($1->add_mfa_identifications($4, $7))
@@ -23728,7 +23797,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ($3 == $6) {
                my_error(ER_MFA_METHODS_IDENTICAL, MYF(0));
                MYSQL_YYABORT;
-@@ -17090,45 +18045,42 @@ alter_user:
+@@ -17116,45 +18045,42 @@ alter_user:
              $7->nth_factor = $6;
              $7->modify_factor = true;
              if ($1->add_mfa_identifications($4, $7))
@@ -23784,7 +23853,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (my_strcasecmp(system_charset_info, $1.str, "2") == 0) {
                $$ = 2;
              } else if (my_strcasecmp(system_charset_info, $1.str, "3") == 0) {
-@@ -17138,349 +18090,280 @@ factor:
+@@ -17164,435 +18090,328 @@ factor:
                 MYSQL_YYABORT;
              }
            }
@@ -24249,20 +24318,40 @@ index 64b26b3ac2d..82e1d9aa949 100644
 +;
  
  view_tail:
--          view_suid VIEW_SYM table_ident opt_derived_column_list
+-          view_suid VIEW_SYM opt_if_not_exists table_ident
+-          opt_derived_column_list
 -          {
 +view_suid VIEW_SYM table_ident opt_derived_column_list {
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              lex->sql_command= SQLCOM_CREATE_VIEW;
+-            if ($3)
+-            {
+-              if ((lex->create_view_mode ==
+-                   enum_view_create_mode::VIEW_ALTER) ||
+-                  (lex->create_view_mode ==
+-                   enum_view_create_mode::VIEW_CREATE_OR_REPLACE))
+-              {
+-                YYTHD->syntax_error_at(@3);
+-                MYSQL_YYABORT;
+-              }
+-              lex->create_info->options= HA_LEX_CREATE_IF_NOT_EXISTS;
+-            }
 -            /* first table in list is target VIEW name */
+-            if (!lex->query_block->add_table_to_list(thd, $4, nullptr,
 +            
-             if (!lex->query_block->add_table_to_list(thd, $3, nullptr,
++            if (!lex->query_block->add_table_to_list(thd, $3, nullptr,
                                                      TL_OPTION_UPDATING,
                                                      TL_IGNORE,
-@@ -17492,68 +18375,43 @@ view_tail:
+                                                     MDL_EXCLUSIVE))
+               MYSQL_YYABORT;
+             lex->query_tables->open_strategy= Table_ref::OPEN_STUB;
+             thd->parsing_system_view= lex->query_tables->is_system_view;
+-            if ($5.size())
++            if ($4.size())
              {
-               for (auto column_alias : $4)
+-              for (auto column_alias : $5)
++              for (auto column_alias : $4)
                {
 -                // Report error if the column name/length is incorrect.
 +                
@@ -24273,12 +24362,13 @@ index 64b26b3ac2d..82e1d9aa949 100644
                  }
                }
 -              /*
--                The $4 object is short-lived (its 'm_array' is not);
+-                The $5 object is short-lived (its 'm_array' is not);
 -                so we have to duplicate it, and then we can store a
 -                pointer.
 -              */
+-              void *rawmem= thd->memdup(&($5), sizeof($5));
 +              
-               void *rawmem= thd->memdup(&($4), sizeof($4));
++              void *rawmem= thd->memdup(&($4), sizeof($4));
                if (!rawmem)
 -                MYSQL_YYABORT; /* purecov: inspected */
 +                MYSQL_YYABORT; 
@@ -24338,7 +24428,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              const size_t len= @2.cpp.end - @1.cpp.start;
              lex->create_view_query_block.str=
                static_cast<char *>(thd->memdup(@1.cpp.start, len));
-@@ -17563,55 +18421,33 @@ view_query_block:
+@@ -17602,55 +18421,33 @@ view_query_block:
              lex->parsing_options.allows_variable= true;
              lex->parsing_options.allows_select_into= true;
            }
@@ -24407,7 +24497,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
  
-@@ -17642,13 +18478,11 @@ trigger_tail:
+@@ -17681,13 +18478,11 @@ trigger_tail:
              memset(&lex->sp_chistics, 0, sizeof(st_sp_chistics));
              sp->m_chistics= &lex->sp_chistics;
  
@@ -24423,7 +24513,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
-@@ -17660,11 +18494,7 @@ trigger_tail:
+@@ -17699,11 +18494,7 @@ trigger_tail:
              if (sp->is_not_allowed_in_function("trigger"))
                MYSQL_YYABORT;
  
@@ -24436,7 +24526,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (!lex->query_block->add_table_to_list(thd, $7,
                                                      nullptr,
                                                      TL_OPTION_UPDATING,
-@@ -17674,24 +18504,10 @@ trigger_tail:
+@@ -17713,24 +18504,10 @@ trigger_tail:
  
              Lex->m_sql_cmd= new (YYTHD->mem_root) Sql_cmd_create_trigger();
            }
@@ -24463,7 +24553,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
  
-@@ -17699,10 +18515,7 @@ udf_tail:
+@@ -17738,10 +18515,7 @@ udf_tail:
              {
                if($3)
                {
@@ -24475,7 +24565,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                  my_error(ER_IF_NOT_EXISTS_UNSUPPORTED_UDF_NATIVE_FCT_NAME_COLLISION, MYF(0), $4.str);
                }
                else
-@@ -17717,14 +18530,7 @@ udf_tail:
+@@ -17756,14 +18530,7 @@ udf_tail:
              lex->udf.returns=(Item_result) $6;
              lex->udf.dl=$8.str;
            }
@@ -24491,7 +24581,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
  
-@@ -17732,10 +18538,7 @@ udf_tail:
+@@ -17771,10 +18538,7 @@ udf_tail:
              {
                if($2)
                {
@@ -24503,7 +24593,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                  my_error(ER_IF_NOT_EXISTS_UNSUPPORTED_UDF_NATIVE_FCT_NAME_COLLISION, MYF(0), $3.str);
                }
                else
-@@ -17750,14 +18553,10 @@ udf_tail:
+@@ -17789,14 +18553,10 @@ udf_tail:
              lex->udf.returns=(Item_result) $5;
              lex->udf.dl=$7.str;
            }
@@ -24520,7 +24610,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
  
-@@ -17780,16 +18579,9 @@ sf_tail:
+@@ -17819,16 +18579,9 @@ sf_tail:
              lex->create_info->options= $2 ? HA_LEX_CREATE_IF_NOT_EXISTS : 0;
  
              sp->m_parser_data.set_parameter_start_ptr(@4.cpp.end);
@@ -24539,7 +24629,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              sp_head *sp= lex->sphead;
  
-@@ -17799,11 +18591,7 @@ sf_tail:
+@@ -17838,11 +18591,7 @@ sf_tail:
              if (merge_sp_var_charset_and_collation(cs, $11, &cs))
                MYSQL_YYABORT;
  
@@ -24552,7 +24642,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if ((field_type == MYSQL_TYPE_STRING || field_type == MYSQL_TYPE_VARCHAR)
                  && ($10->get_type_flags() & BINCMP_FLAG))
              {
-@@ -17829,19 +18617,15 @@ sf_tail:
+@@ -17868,19 +18617,15 @@ sf_tail:
  
              memset(&lex->sp_chistics, 0, sizeof(st_sp_chistics));
  
@@ -24575,7 +24665,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= thd->lex;
              sp_head *sp= lex->sphead;
-@@ -17858,33 +18642,7 @@ sf_tail:
+@@ -17897,33 +18642,7 @@ sf_tail:
  
              if (is_native_function(sp->m_name))
              {
@@ -24610,7 +24700,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                push_warning_printf(thd,
                                    Sql_condition::SL_NOTE,
                                    ER_NATIVE_FCT_NAME_COLLISION,
-@@ -17892,15 +18650,14 @@ sf_tail:
+@@ -17931,15 +18650,14 @@ sf_tail:
                                    sp->m_name.str);
              }
            }
@@ -24630,7 +24720,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              sp_head *sp = Lex->sphead;
              if (sp->is_sql()) {
                 YYTHD->syntax_error();
-@@ -17911,8 +18668,7 @@ stored_routine_body:
+@@ -17950,8 +18668,7 @@ stored_routine_body:
              THD *thd = YYTHD;
              sp_finish_parsing(thd);
            }
@@ -24640,7 +24730,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (!Lex->sphead->is_sql()) {
                YYTHD->syntax_error();
                MYSQL_YYABORT;
-@@ -17921,13 +18677,10 @@ stored_routine_body:
+@@ -17960,13 +18677,10 @@ stored_routine_body:
              THD *thd = YYTHD;
              sp_finish_parsing(thd);
            }
@@ -24656,7 +24746,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              THD *thd= YYTHD;
              LEX *lex= Lex;
  
-@@ -17946,80 +18699,62 @@ sp_tail:
+@@ -17985,80 +18699,62 @@ sp_tail:
  
              lex->sphead= sp;
              lex->create_info->options= $2 ? HA_LEX_CREATE_IF_NOT_EXISTS : 0;
@@ -24753,7 +24843,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              MYSQL_YYABORT_UNLESS($1->length() <= MAXGTRIDSIZE);
              XID *xid;
              if (!(xid= (XID *)YYTHD->alloc(sizeof(XID))))
-@@ -18027,8 +18762,7 @@ xid:
+@@ -18066,8 +18762,7 @@ xid:
              xid->set(1L, $1->ptr(), $1->length(), nullptr, 0);
              $$= xid;
            }
@@ -24763,7 +24853,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              MYSQL_YYABORT_UNLESS($1->length() <= MAXGTRIDSIZE &&
                                   $3->length() <= MAXBQUALSIZE);
              XID *xid;
-@@ -18037,9 +18771,8 @@ xid:
+@@ -18076,9 +18771,8 @@ xid:
              xid->set(1L, $1->ptr(), $1->length(), $3->ptr(), $3->length());
              $$= xid;
            }
@@ -24775,7 +24865,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              bool format_id_overflow_detected= ($5 > LONG_MAX);
  
              MYSQL_YYABORT_UNLESS($1->length() <= MAXGTRIDSIZE &&
-@@ -18052,125 +18785,111 @@ xid:
+@@ -18091,125 +18785,111 @@ xid:
              xid->set($5, $1->ptr(), $1->length(), $3->ptr(), $3->length());
              $$= xid;
            }
@@ -24946,7 +25036,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              LEX *lex= Lex;
              lex->m_sql_cmd=
                new (YYTHD->mem_root) Sql_cmd_import_table($4);
-@@ -18178,29 +18897,18 @@ import_stmt:
+@@ -18217,29 +18897,18 @@ import_stmt:
                MYSQL_YYABORT;
              lex->sql_command= SQLCOM_IMPORT;
            }
@@ -24980,7 +25070,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
              if (@6.raw.start - @4.raw.end != 1) {
                YYTHD->syntax_error_at(@5);
                MYSQL_YYABORT;
-@@ -18214,125 +18922,110 @@ clone_stmt:
+@@ -18253,125 +18922,110 @@ clone_stmt:
              if (Lex->m_sql_cmd == nullptr)
                MYSQL_YYABORT;
            }
@@ -25145,7 +25235,7 @@ index 64b26b3ac2d..82e1d9aa949 100644
                size_t eoff = 0;
                std::string emsg;
                if (!is_valid_json_syntax($1.str, $1.length, &eoff, &emsg,
-@@ -18345,6 +19038,3 @@ json_attribute:
+@@ -18384,6 +19038,3 @@ json_attribute:
              $$ = to_lex_cstring($1);
            }
  
