@@ -20,5 +20,5 @@ let
   }); 
 in
 (pkgs.mysql84.overrideAttrs (final: prev: {
-patches = prev.patches ++ [];
+patches = prev.patches ++ [./mysql/sql_yacc.patch];
 })).override({bison =custom-bison;})
